@@ -1,7 +1,17 @@
-import { Inter } from "next/font/google";
+import localFont from "next/font/local"
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const danaFont = localFont({
+  src: [
+    {
+      path: "../../public/fonts/dana-regular.woff2",
+      weight: "400",
+      style: "normal"
+    },
+  ],
+  display: "swap"
+})
 
 export const metadata = {
   title: "Create Next App",
@@ -10,8 +20,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="fa-IR" dir="rtl" className={`${danaFont.className} scroll-smooth`}>
+      <body className={danaFont.className}>
+        <Toaster position="bottom-center"/>
+        {children}
+      </body>
     </html>
   );
 }
