@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("@/css/_loading.css");
 @import url("@/css/_button.css");
 @import url("@/css/_input.css");
 
