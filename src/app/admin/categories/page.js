@@ -1,5 +1,6 @@
 "use client"
 
+import { motion } from "framer-motion"
 import EditableImage from "@/components/common/EditableImage"
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon"
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon"
@@ -16,8 +17,10 @@ export default function Categories() {
     const [categoryImage, setCategoryImage] = useState('')
     const [categoryName, setCategoryName] = useState('')
     const [categoryParentsId, setCategoryParentsId] = useState([])
+    const [currentClickedCategoryData, setCurrentClickedCategoryData] = useState(null)
 
     useEffect(() => {
+        setLoading(true)
         fetchCategories()
     }, [])
 
@@ -26,7 +29,7 @@ export default function Categories() {
     }, [categoryParentsId])
 
     const fetchCategories = () => {
-        setLoading(true)
+        // setLoading(true)
 
         fetch("/api/admin/categories")
             .then(res => res.json())
@@ -38,12 +41,12 @@ export default function Categories() {
 
     const getCategoriesUnderParent = () => {
         if (categoryParentsId?.length > 0) {
-            setLoading(true)
+            // setLoading(true)
 
             fetch("/api/admin/categories/" + categoryParentsId[categoryParentsId.length - 1])
                 .then(res => res.json())
                 .then(data => setCategories(data))
-                .finally(() => setLoading(false))
+                // .finally(() => setLoading(false))
         } else {
             fetchCategories()
         }
@@ -58,11 +61,11 @@ export default function Categories() {
     const handleClosePopup = () => {
         setCategoryImage('')
         setCategoryName('')
-        setCategoryParentsId('')
         setShowPopup(false)
     }
 
     const handleCategoryClick = (categoryId) => {
+        setCurrentClickedCategoryData(categories.find(c => c._id === categoryId))
         setCategoryParentsId(prev => [...prev, categoryId])
     }
 
@@ -117,7 +120,13 @@ export default function Categories() {
                 }
                 {
                     categories?.length > 0 && (
-                        <div className="grid grid-cols-6 gap-2 categories-container">
+                        <motion.div 
+                            className="grid grid-cols-6 gap-2 categories-container"
+                            initial={{ x: -200, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ ease: "linear", duration: 0.5 }}
+                            key={categoryParentsId[categoryParentsId.length - 1]}
+                        >
                             {
                                 categories.map(category => (
                                     <div key={category._id} onClick={() => handleCategoryClick(category._id)} className="grid grid-cols-3 items-center p-4 bg-gray-200 rounded-md cursor-pointer">
@@ -129,7 +138,7 @@ export default function Categories() {
                                     </div>
                                 ))
                             }
-                        </div>
+                        </motion.div>
                     )
                 }
                 {
@@ -153,7 +162,7 @@ export default function Categories() {
                                     <div className="my-4">
                                         <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} placeholder="نام دسته بندی" />
 
-                                        <input type="text" value={categoryParentsId[categoryParentsId.length - 1]} onChange={e => setCategoryParentsId(e.target.value)} placeholder="دسته بندی پدر" disabled />
+                                        <input type="text" value={currentClickedCategoryData?.name} placeholder="دسته بندی پدر" disabled />
                                     </div>
 
                                     <div className="sticky bottom-0 flex items-center justify-between">
