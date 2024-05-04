@@ -46,7 +46,7 @@ export default function Categories() {
             fetch("/api/admin/categories/" + categoryParentsId[categoryParentsId.length - 1])
                 .then(res => res.json())
                 .then(data => setCategories(data))
-                // .finally(() => setLoading(false))
+            // .finally(() => setLoading(false))
         } else {
             fetchCategories()
         }
@@ -75,7 +75,7 @@ export default function Categories() {
 
     const handleCreateCategory = async () => {
         const createCategoryPromise = new Promise(async (resolve, reject) => {
-            const data = { name: categoryName, image: categoryImage, parent: categoryParentsId }
+            const data = { name: categoryName, image: categoryImage, parent: currentClickedCategoryData?._id }
 
             const res = await fetch("/api/admin/categories", {
                 method: "POST",
@@ -120,7 +120,7 @@ export default function Categories() {
                 }
                 {
                     categories?.length > 0 && (
-                        <motion.div 
+                        <motion.div
                             className="grid grid-cols-6 gap-2 categories-container"
                             initial={{ x: -200, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
@@ -159,10 +159,14 @@ export default function Categories() {
 
                                     <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories" width={300} height={200} />
 
-                                    <div className="my-4">
-                                        <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} placeholder="نام دسته بندی" />
+                                    <div className="my-4 flex flex-col gap-2">
+                                        <div className="h-11">
+                                            <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} placeholder="نام دسته بندی" />
+                                        </div>
 
-                                        <input type="text" value={currentClickedCategoryData?.name} placeholder="دسته بندی پدر" disabled />
+                                        <div className="h-11">
+                                            <input type="text" value={currentClickedCategoryData?.name} placeholder="دسته بندی پدر" disabled />
+                                        </div>
                                     </div>
 
                                     <div className="sticky bottom-0 flex items-center justify-between">

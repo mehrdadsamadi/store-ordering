@@ -5,8 +5,9 @@ input[type="password"],
 input[type="tel"],
 input[type="text"],
 textarea {
-    @apply block w-full mb-4 rounded-full;
-    @apply border p-2 border-gray-300 bg-gray-200;
+    /* @apply block w-full mb-4 rounded-full;
+    @apply border p-2 border-gray-300 bg-gray-200 focus:ring-1 ring-primary; */
+    @apply w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-primary
 }
 select:disabled,
 input[type="email"]:disabled,
@@ -14,18 +15,8 @@ input[type="password"]:disabled,
 input[type="tel"]:disabled,
 input[type="text"]:disabled,
 textarea:disabled {
-    @apply bg-gray-300 border-0 cursor-not-allowed text-gray-500;
+    @apply bg-gray-200 border-0 cursor-not-allowed text-gray-500;
 }
-input:active,
-input:target,
-input:focus,
-input:focus-visible {
-    @apply border-primary
-}
-textarea {
-    @apply rounded-2xl
-}
-
 label {
     @apply text-gray-500 text-sm mr-1
 }

@@ -5,6 +5,10 @@ const userSchema = new Schema({
     last_name: { type: String },
     avatar: { type: String },
     phone: { type: String, required: true },
+    otp: {type: Object, default: {
+        code: 0,
+        expiresIn: 0
+    }},
     role: { type: String, default: "USER" }
 })
 
