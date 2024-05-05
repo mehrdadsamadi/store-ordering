@@ -1,3 +1,31 @@
-export async function POST(req) {
+import connectMongo from "@/helpers/connectMongo"
+import User from "@/models/user.model";
+import { NextResponse } from "next/server";
 
+export async function POST(req) {
+    try {
+        await connectMongo()
+
+        const { phone, code } = req.json()
+
+        const user = await User.findOne({ phone })
+        if (!user) {
+            return NextResponse.json({ error: "کاربری با این شماره همراه یافت نشد" }, { status: 404 })
+        }
+
+        if (user?.otp?.code !== code) {
+            return NextResponse.json({ error: "کد ارسال شده صحیح نمیباشد" }, { status: 401 })
+        }
+
+        const now = new Date().getTime()
+        if (+user.otp.expiresIn < +now) {
+            return NextResponse.json({ error: "کد شما منقضی شده است ، کد جدید دریافت کنید" }, { status: 401 })
+        }
+
+        return NextResponse.json(user)
+        
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
 }

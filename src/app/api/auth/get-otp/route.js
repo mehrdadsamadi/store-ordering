@@ -11,19 +11,8 @@ export async function POST(req) {
         if (resend) {
             await User.deleteOne({ phone })
         }
-        
-        const user = await User.findOne({phone})
-        console.log(user);
-        if (user) {
-            return NextResponse.json({error: "کاربری با این شماره همراه قبلا ثبت نام کرده است"}, {status: 400})
-        }
 
         const code = getRandomFourDigit()
-
-        const saveUserResult = saveUser(phone, code)
-        if (!saveUserResult) {
-            return NextResponse.json({error: "ورود شما ناموفق بود ، بار دیگر تلاش کنید"}, {status: 400})
-        }
 
         const sendedData = {
             "op": "pattern",
@@ -37,18 +26,27 @@ export async function POST(req) {
             ]
         }
 
-        await fetch("http://ippanel.com/api/select", {
-            method: 'post',
-            body: JSON.stringify(sendedData),
-            headers: { 'Content-Type': 'application/json' }
-        })
+        const saveUserResult = saveUser(phone, code)
+        if (!saveUserResult) {
+            return NextResponse.json({ error: "ورود شما ناموفق بود ، بار دیگر تلاش کنید" }, { status: 401 })
+        }
 
-        return NextResponse.json({message: "کد تایید با موفقیت برای شما ارسال شد"})
+        await sendSms(sendedData)
+
+        return NextResponse.json({ message: "کد تایید با موفقیت برای شما ارسال شد" })
 
     } catch (error) {
         console.log(error);
-        return NextResponse.json({error: error.message}, {status: 500})
+        return NextResponse.json({ error: error.message }, { status: 500 })
     }
+}
+
+async function sendSms(data) {
+    await fetch("http://ippanel.com/api/select", {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    })
 }
 
 async function saveUser(phone, code) {
