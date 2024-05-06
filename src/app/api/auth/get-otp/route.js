@@ -31,7 +31,7 @@ export async function POST(req) {
             return NextResponse.json({ error: "ورود شما ناموفق بود ، بار دیگر تلاش کنید" }, { status: 401 })
         }
 
-        await sendSms(sendedData)
+        // await sendSms(sendedData)
 
         return NextResponse.json({ message: "کد تایید با موفقیت برای شما ارسال شد" })
 

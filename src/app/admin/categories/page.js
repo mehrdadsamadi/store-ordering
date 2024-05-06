@@ -85,15 +85,16 @@ export default function Categories() {
             handleClosePopup()
             fetchCategories()
 
-            res.ok ? resolve() : reject()
+            const body = await res.json()
+            res.ok ? resolve(body) : reject(body)
         })
 
         await toast.promise(
             createCategoryPromise,
             {
                 loading: 'در حال ایجاد دسته بندی ...',
-                success: 'دسته بندی با موفقیت ایجاد شد.',
-                error: 'مشکلی به وجود آمده، بار دیگر امتحان کنید.',
+                success: ({message}) => message,
+                error: ({error}) => error,
             }
         )
     }

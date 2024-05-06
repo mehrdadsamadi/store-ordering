@@ -1,10 +1,16 @@
 "use client"
 
+import { motion } from "framer-motion"
+import useCountDown from 'react-countdown-hook';
 import LoadingIcon from "@/components/icons/LoadingIcon"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
+import ShopStoreIcon from "@/components/icons/shopStoreIcon";
+import TruckIcon from "@/components/icons/TruckIcon";
 
 export default function Login() {
+
+    const [timeLeft, { start, pause, resume, reset }] = useCountDown(2 * 60 * 1000, 1000)
 
     const [loading, setLoading] = useState(false)
     const [steps, setSteps] = useState([
@@ -18,16 +24,53 @@ export default function Login() {
             description: "کد ارسال شده به شماره همراه خود را وارد کنید",
             buttonText: "ثبت و ادامه"
         },
+        {
+            step: 3,
+            description: "عنوان شغلی خود را انتخاب کنید",
+            buttonText: "ثبت و ادامه"
+        },
     ])
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(3)
     const [phone, setPhone] = useState('')
+    const [resendButton, setResendButton] = useState(false)
+
     const [otp1, setOtp1] = useState('')
     const [otp2, setOtp2] = useState('')
     const [otp3, setOtp3] = useState('')
     const [otp4, setOtp4] = useState('')
 
+    const otp1Ref = useRef()
+    const otp2Ref = useRef()
+    const otp3Ref = useRef()
+    const otp4Ref = useRef()
+
+    useEffect(() => {
+        if (step === 2) {
+            start(2 * 60 * 1000)
+        }
+    }, [step])
+
+    useEffect(() => {
+        if (timeLeft === 1000) {
+            setResendButton(true)
+        }
+    }, [timeLeft])
+
+
+    const handleOtpInput = (e) => {
+        const { target } = e;
+        [['otp1', otp2Ref], ['otp2', otp3Ref], ['otp3', otp4Ref]].map((otps) => {
+            if (target.id === otps[0]) {
+                otps[1].current.focus()
+            }
+        })
+    }
+
     const getOtp = async ({ resend = false }) => {
         setLoading(true)
+
+        start(2 * 60 * 1000)
+        setResendButton(false)
 
         const getOtpPromise = new Promise(async (resolve, reject) => {
 
@@ -37,15 +80,16 @@ export default function Login() {
                 body: JSON.stringify({ phone, resend }),
             })
 
-            res.ok ? resolve() : reject()
+            const body = await res.json()
+            res.ok ? resolve(body) : reject(body)
         })
 
         await toast.promise(
             getOtpPromise,
             {
                 loading: 'در حال ارسال کد تایید',
-                success: 'کد تایید با موفقیت برای شما ارسال شد',
-                error: 'مشکلی به وجود آمده، بار دیگر امتحان کنید.',
+                success: ({ message }) => message,
+                error: ({ error }) => error,
             }
         )
             .then(() => setStep(2))
@@ -59,16 +103,22 @@ export default function Login() {
         [otp1, otp2, otp3, otp4].map(states => {
             code += states
         })
-        
+
         const checkOtpPromise = new Promise(async (resolve, reject) => {
 
             const res = await fetch("/api/auth/check-otp", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, code}),
+                body: JSON.stringify({ phone, code }),
             })
 
-            res.ok ? resolve() : reject()
+            const body = await res.json()
+            if (res.ok) {
+                localStorage.setItem("user", JSON.stringify(body))
+                resolve()
+            } else {
+                reject(body)
+            }
         })
 
         await toast.promise(
@@ -76,9 +126,10 @@ export default function Login() {
             {
                 loading: 'در حال بررسی کد تایید',
                 success: 'کد تایید با موفقیت بررسی شد',
-                error: 'مشکلی به وجود آمده، بار دیگر امتحان کنید.',
+                error: ({ error }) => error,
             }
         )
+            .then(() => setStep(3))
             .finally(() => setLoading(false))
     }
 
@@ -106,7 +157,14 @@ export default function Login() {
                             </div>
                         </div>
                         <div className="flex flex-col space-y-8">
-                            <div className="flex flex-row items-center justify-between mx-auto w-full max-w-xs" dir="ltr">
+                            <motion.div
+                                className="flex flex-row items-center justify-between mx-auto w-full max-w-xs"
+                                dir="ltr"
+                                initial={{ x: -200, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ ease: "linear", duration: 0.5 }}
+                                key={step}
+                            >
                                 {
                                     step === 1 && (
                                         <div className="w-full h-11">
@@ -118,21 +176,35 @@ export default function Login() {
                                     step === 2 && (
                                         <>
                                             <div className="w-16 h-16 ">
-                                                <input className="otp" value={otp1} onChange={e => setOtp1(e.target.value)} type="text" />
+                                                <input className="otp" id="otp1" ref={otp1Ref} value={otp1} onChange={e => { setOtp1(e.target.value); handleOtpInput(e) }} type="text" />
                                             </div>
                                             <div className="w-16 h-16 ">
-                                                <input className="otp" value={otp2} onChange={e => setOtp2(e.target.value)} type="text" />
+                                                <input className="otp" id="otp2" ref={otp2Ref} value={otp2} onChange={e => { setOtp2(e.target.value); handleOtpInput(e) }} type="text" />
                                             </div>
                                             <div className="w-16 h-16 ">
-                                                <input className="otp" value={otp3} onChange={e => setOtp3(e.target.value)} type="text" />
+                                                <input className="otp" id="otp3" ref={otp3Ref} value={otp3} onChange={e => { setOtp3(e.target.value); handleOtpInput(e) }} type="text" />
                                             </div>
                                             <div className="w-16 h-16 ">
-                                                <input className="otp" value={otp4} onChange={e => setOtp4(e.target.value)} type="text" />
+                                                <input className="otp" id="otp4" ref={otp4Ref} value={otp4} onChange={e => { setOtp4(e.target.value); handleOtpInput(e) }} type="text" />
                                             </div>
                                         </>
                                     )
                                 }
-                            </div>
+                                {
+                                    step === 3 && (
+                                        <div className="grid grid-cols-2 gap-2 w-full" dir="rtl">
+                                            <div className="rounded-xl p-4 border cursor-pointer hover:font-semibold flex items-center gap-2 justify-center">
+                                                <ShopStoreIcon />
+                                                <p>فروشگاه دار</p>
+                                            </div>
+                                            <div className="rounded-xl p-4 border cursor-pointer hover:font-semibold flex items-center gap-2 justify-center">
+                                                <TruckIcon />
+                                                <p>راننده</p>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            </motion.div>
 
                             <div className="flex flex-col space-y-5">
                                 <div>
@@ -150,13 +222,31 @@ export default function Login() {
                                             </button>
                                         )
                                     }
+                                    {
+                                        step === 3 && (
+                                            <button className="submit w-full rounded-xl" onClick={checkOtp}>
+                                                {steps[step - 1]?.buttonText}
+                                            </button>
+                                        )
+                                    }
                                 </div>
 
                                 {
                                     step === 2 && (
                                         <div className="flex flex-row gap-2 items-center justify-center text-center text-sm font-mediums text-gray-500">
-                                            <p>کد برای شما ارسال نشد؟</p>
-                                            <p className="flex flex-row items-center text-primary font-semibold cursor-pointer" onClick={() => getOtp({ resend: true })}>ارسال دوباره</p>
+                                            {
+                                                resendButton ? (
+                                                    <>
+                                                        <p>کد برای شما ارسال نشد؟</p>
+                                                        <p className="flex flex-row items-center text-primary font-semibold cursor-pointer" onClick={() => getOtp({ resend: true })}>ارسال دوباره</p>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <p>ارسال مجدد کد تا: </p>
+                                                        <p className="flex flex-row items-center text-primary font-semibold cursor-pointer">{timeLeft / 1000} ثانیه دیگر</p>
+                                                    </>
+                                                )
+                                            }
                                         </div>
                                     )
                                 }
