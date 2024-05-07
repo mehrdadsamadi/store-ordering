@@ -1,3 +1,5 @@
+import { ROLES } from "@/helpers/roles";
+
 const { Schema, model, models } = require("mongoose");
 
 const userSchema = new Schema({
@@ -9,7 +11,7 @@ const userSchema = new Schema({
         code: 0,
         expiresIn: 0
     }},
-    role: { type: String, default: "USER" }
+    role: { type: String, default: ROLES.USER }
 })
 
 const User = models?.user || model("user", userSchema)

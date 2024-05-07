@@ -1,5 +1,6 @@
 import connectMongo from "@/helpers/connectMongo";
 import { getRandomFourDigit } from "@/helpers/getRandomFourDigit"
+import { ROLES } from "@/helpers/roles";
 import User from "@/models/user.model"
 import { NextResponse } from "next/server";
 
@@ -60,7 +61,7 @@ async function saveUser(phone, code) {
     if (existUserResult) {
         return (await updateUserOtp(phone, otp))
     }
-    return !!(await User.create({ phone, otp, role: "USER" }))
+    return !!(await User.create({ phone, otp, role: ROLES.USER }))
 }
 
 async function checkExistUser(phone) {

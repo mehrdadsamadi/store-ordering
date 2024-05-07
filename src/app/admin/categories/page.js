@@ -157,8 +157,11 @@ export default function Categories() {
                         <div onClick={() => setShowPopup(false)} className="fixed inset-0 bg-black/30 flex items-center justify-center">
                             <div onClick={(e) => e.stopPropagation()} className="bg-white p-2 rounded-lg max-w-md">
                                 <div className="overflow-y-auto p-2" style={{ maxHeight: 'calc(100vh - 100px)' }}>
-
-                                    <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories" width={300} height={200} />
+                                    <h3 className="text-center mb-4 font-semibold border-b pb-2">ایجاد دسته بندی</h3>
+                                    
+                                    <div className="w-[300px] h-[200px]">
+                                        <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories" width={300} height={200} />
+                                    </div>
 
                                     <div className="my-4 flex flex-col gap-2">
                                         <div className="h-11">

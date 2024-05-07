@@ -5,11 +5,13 @@ import useCountDown from 'react-countdown-hook';
 import LoadingIcon from "@/components/icons/LoadingIcon"
 import { useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
-import ShopStoreIcon from "@/components/icons/shopStoreIcon";
-import TruckIcon from "@/components/icons/TruckIcon";
+import { useRouter } from "next/navigation";
+import ChooseRole from "@/components/client/login/chooseRole/chooseRole";
+import { ROLES } from "@/helpers/roles";
 
 export default function Login() {
 
+    const { push } = useRouter()
     const [timeLeft, { start, pause, resume, reset }] = useCountDown(2 * 60 * 1000, 1000)
 
     const [loading, setLoading] = useState(false)
@@ -114,8 +116,8 @@ export default function Login() {
 
             const body = await res.json()
             if (res.ok) {
-                localStorage.setItem("user", JSON.stringify(body))
-                resolve()
+                localStorage.setItem(ROLES.USER, JSON.stringify(body))
+                resolve(body)
             } else {
                 reject(body)
             }
@@ -129,7 +131,13 @@ export default function Login() {
                 error: ({ error }) => error,
             }
         )
-            .then(() => setStep(3))
+            .then((data) => {
+                const { role } = data
+                if (role && role !== ROLES.USER) {
+                    return push("/")
+                }
+                setStep(3)
+            })
             .finally(() => setLoading(false))
     }
 
@@ -192,65 +200,53 @@ export default function Login() {
                                 }
                                 {
                                     step === 3 && (
-                                        <div className="grid grid-cols-2 gap-2 w-full" dir="rtl">
-                                            <div className="rounded-xl p-4 border cursor-pointer hover:font-semibold flex items-center gap-2 justify-center">
-                                                <ShopStoreIcon />
-                                                <p>فروشگاه دار</p>
-                                            </div>
-                                            <div className="rounded-xl p-4 border cursor-pointer hover:font-semibold flex items-center gap-2 justify-center">
-                                                <TruckIcon />
-                                                <p>راننده</p>
-                                            </div>
-                                        </div>
+                                        <ChooseRole />
                                     )
                                 }
                             </motion.div>
 
-                            <div className="flex flex-col space-y-5">
-                                <div>
-                                    {
-                                        step === 1 && (
-                                            <button className="submit w-full rounded-xl" onClick={getOtp}>
-                                                {steps[step - 1]?.buttonText}
-                                            </button>
-                                        )
-                                    }
-                                    {
-                                        step === 2 && (
-                                            <button className="submit w-full rounded-xl" onClick={checkOtp}>
-                                                {steps[step - 1]?.buttonText}
-                                            </button>
-                                        )
-                                    }
-                                    {
-                                        step === 3 && (
-                                            <button className="submit w-full rounded-xl" onClick={checkOtp}>
-                                                {steps[step - 1]?.buttonText}
-                                            </button>
-                                        )
-                                    }
-                                </div>
-
-                                {
-                                    step === 2 && (
-                                        <div className="flex flex-row gap-2 items-center justify-center text-center text-sm font-mediums text-gray-500">
+                            {
+                                step !== 3 && (
+                                    <div className="flex flex-col space-y-5">
+                                        <div>
                                             {
-                                                resendButton ? (
-                                                    <>
-                                                        <p>کد برای شما ارسال نشد؟</p>
-                                                        <p className="flex flex-row items-center text-primary font-semibold cursor-pointer" onClick={() => getOtp({ resend: true })}>ارسال دوباره</p>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <p>ارسال مجدد کد تا: </p>
-                                                        <p className="flex flex-row items-center text-primary font-semibold cursor-pointer">{timeLeft / 1000} ثانیه دیگر</p>
-                                                    </>
+                                                step === 1 && (
+                                                    <button className="submit w-full rounded-xl" onClick={getOtp}>
+                                                        {steps[step - 1]?.buttonText}
+                                                    </button>
+                                                )
+                                            }
+                                            {
+                                                step === 2 && (
+                                                    <button className="submit w-full rounded-xl" onClick={checkOtp}>
+                                                        {steps[step - 1]?.buttonText}
+                                                    </button>
                                                 )
                                             }
                                         </div>
-                                    )
-                                }
-                            </div>
+
+                                        {
+                                            step === 2 && (
+                                                <div className="flex flex-row gap-2 items-center justify-center text-center text-sm font-mediums text-gray-500">
+                                                    {
+                                                        resendButton ? (
+                                                            <>
+                                                                <p>کد برای شما ارسال نشد؟</p>
+                                                                <p className="flex flex-row items-center text-primary font-semibold cursor-pointer" onClick={() => getOtp({ resend: true })}>ارسال دوباره</p>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <p>ارسال مجدد کد تا: </p>
+                                                                <p className="flex flex-row items-center text-primary font-semibold cursor-pointer">{timeLeft / 1000} ثانیه دیگر</p>
+                                                            </>
+                                                        )
+                                                    }
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                )
+                            }
                         </div>
                     </div>
                 </div>
