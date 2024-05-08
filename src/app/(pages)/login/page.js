@@ -6,7 +6,7 @@ import LoadingIcon from "@/components/icons/LoadingIcon"
 import { useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation";
-import ChooseRole from "@/components/client/login/chooseRole/chooseRole";
+import ChooseRole from "@/components/client/login/chooseRole";
 import { ROLES } from "@/helpers/roles";
 
 export default function Login() {
@@ -116,7 +116,7 @@ export default function Login() {
 
             const body = await res.json()
             if (res.ok) {
-                localStorage.setItem(ROLES.USER, JSON.stringify(body))
+                localStorage.setItem("user", JSON.stringify(body))
                 resolve(body)
             } else {
                 reject(body)
@@ -200,7 +200,7 @@ export default function Login() {
                                 }
                                 {
                                     step === 3 && (
-                                        <ChooseRole />
+                                        <ChooseRole setLoading={setLoading} phone={phone}/>
                                     )
                                 }
                             </motion.div>

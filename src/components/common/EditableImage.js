@@ -41,7 +41,7 @@ export default function EditableImage({ link, setLink, folder = 'avatars' }) {
         <div className={`relative border border-dashed w-full h-full rounded-md overflow-hidden`}>
             {
                 link && (
-                    <Image src={link} alt="avatar" className="rounded-md w-full h-full mx-auto mb-1" quality={100} width={120} height={120} objectFit="cover" />
+                    <Image src={link} alt="avatar" className="rounded-md w-full h-full mx-auto mb-1" quality={100} width={120} height={120} />
                 )
             }
             <label className="absolute top-0 right-0 left-0 bottom-0 flex justify-center items-center">
