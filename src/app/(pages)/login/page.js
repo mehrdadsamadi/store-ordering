@@ -8,10 +8,13 @@ import toast from "react-hot-toast"
 import { useRouter } from "next/navigation";
 import ChooseRole from "@/components/client/login/chooseRole";
 import { ROLES } from "@/helpers/roles";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
 
     const { push } = useRouter()
+    const { user } = useAuth()
+    
     const [timeLeft, { start, pause, resume, reset }] = useCountDown(2 * 60 * 1000, 1000)
 
     const [loading, setLoading] = useState(false)
@@ -32,7 +35,7 @@ export default function Login() {
             buttonText: "ثبت و ادامه"
         },
     ])
-    const [step, setStep] = useState(3)
+    const [step, setStep] = useState(1)
     const [phone, setPhone] = useState('')
     const [resendButton, setResendButton] = useState(false)
 
@@ -47,6 +50,12 @@ export default function Login() {
     const otp4Ref = useRef()
 
     useEffect(() => {
+        if (user?.phone) {
+            return push("/")
+        }
+    }, [])
+
+    useEffect(() => {
         if (step === 2) {
             start(2 * 60 * 1000)
         }
@@ -57,7 +66,6 @@ export default function Login() {
             setResendButton(true)
         }
     }, [timeLeft])
-
 
     const handleOtpInput = (e) => {
         const { target } = e;
@@ -147,7 +155,7 @@ export default function Login() {
                 <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
                     {
                         loading && (
-                            <div className="inset-0 bg-black/20 flex items-center justify-center absolute rounded-md">
+                            <div className="inset-0 bg-black/20 flex items-center justify-center absolute rounded-md z-50">
                                 <div className="border border-gray-300 bg-gray-50/30 px-4 py-2 text-center text-gray-900 rounded-lg flex flex-col items-center justify-center">
                                     <LoadingIcon />
                                     <p className="mt-2 font-semibold cursor-default">منتظر بمانید</p>
@@ -200,7 +208,7 @@ export default function Login() {
                                 }
                                 {
                                     step === 3 && (
-                                        <ChooseRole setLoading={setLoading} phone={phone}/>
+                                        <ChooseRole setLoading={setLoading} phone={phone} />
                                     )
                                 }
                             </motion.div>
@@ -211,14 +219,14 @@ export default function Login() {
                                         <div>
                                             {
                                                 step === 1 && (
-                                                    <button className="submit w-full rounded-xl" onClick={getOtp}>
+                                                    <button className="submit w-full rounded-xl" disabled={phone.length !== 11} onClick={getOtp}>
                                                         {steps[step - 1]?.buttonText}
                                                     </button>
                                                 )
                                             }
                                             {
                                                 step === 2 && (
-                                                    <button className="submit w-full rounded-xl" onClick={checkOtp}>
+                                                    <button className="submit w-full rounded-xl" disabled={!otp4} onClick={checkOtp}>
                                                         {steps[step - 1]?.buttonText}
                                                     </button>
                                                 )

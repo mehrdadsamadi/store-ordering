@@ -15,7 +15,7 @@ export default function ChooseRole({ setLoading, phone }) {
     const { push } = useRouter()
 
     const [role, setRole] = useState('')
-    const [step, setStep] = useState(3)
+    const [step, setStep] = useState(1)
 
     const [userImage, setUserImage] = useState('')
     const [firstName, setFirstName] = useState('')
@@ -47,7 +47,7 @@ export default function ChooseRole({ setLoading, phone }) {
         await toast.promise(
             userBaseInfoPromise,
             {
-                loading: 'در حال ارسال کد تایید',
+                loading: 'در حال ثبت اطلاعات',
                 success: ({ message }) => message,
                 error: ({ error }) => error,
             }
@@ -110,14 +110,14 @@ export default function ChooseRole({ setLoading, phone }) {
                         </div>
 
                         <div className="w-full mt-2">
-                            <button type="submit" className="submit w-full rounded-xl">ثبت و ادامه</button>
+                            <button type="submit" disabled={!userImage || !firstName || !lastName} className="submit w-full rounded-xl">ثبت و ادامه</button>
                         </div>
                     </form>
                 )
             }
             {
                 step === 3 && (
-                    <StoreInfo />
+                    <StoreInfo setLoading={setLoading}/>
                 )
             }
         </motion.div>

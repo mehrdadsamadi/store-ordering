@@ -14,6 +14,7 @@ export default function Categories() {
     const [showPopup, setShowPopup] = useState(false)
     const [loading, setLoading] = useState(true)
     const [categories, setCategories] = useState([])
+    const [fixCategories, setFixCategories] = useState([])
     const [categoryImage, setCategoryImage] = useState('')
     const [categoryName, setCategoryName] = useState('')
     const [categoryParentsId, setCategoryParentsId] = useState([])
@@ -34,6 +35,7 @@ export default function Categories() {
         fetch("/api/admin/categories")
             .then(res => res.json())
             .then(data => {
+                setFixCategories(data)
                 setCategories(data.filter(c => c.parent === undefined))
             })
             .finally(() => setLoading(false))
@@ -93,8 +95,8 @@ export default function Categories() {
             createCategoryPromise,
             {
                 loading: 'در حال ایجاد دسته بندی ...',
-                success: ({message}) => message,
-                error: ({error}) => error,
+                success: ({ message }) => message,
+                error: ({ error }) => error,
             }
         )
     }
@@ -111,14 +113,38 @@ export default function Categories() {
                 </div>
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
-                {
-                    categoryParentsId?.length > 0 && (
-                        <button className="rounded-md mb-4" onClick={handleBackClick}>
-                            <ArrowRightIcon />
-                            <p>برگرد عقب</p>
-                        </button>
-                    )
-                }
+                <div className="flex gap-2 mb-4">
+                    {
+                        categoryParentsId?.length > 0 && (
+                            <>
+                                <button className="rounded-md flex items-center" onClick={handleBackClick}>
+                                    <ArrowRightIcon />
+                                    <p>برگرد عقب</p>
+                                </button>
+                                <nav className="flex px-5 py-3 text-primary border border-gray-300 rounded-lg" aria-label="Breadcrumb">
+                                    <ol className="inline-flex items-center">
+                                        {
+                                            categoryParentsId.map((pId, index) => (
+                                                <li className="" key={index}>
+                                                    <span className="flex items-center text-sm font-medium text-gray-500">
+                                                        {
+                                                            index !== 0 && (
+                                                                <div className="mx-2">
+                                                                    <ChevronLeftIcon />
+                                                                </div>
+                                                            )
+                                                        }
+                                                        {fixCategories.find(c => c._id === pId)?.name}
+                                                    </span>
+                                                </li>
+                                            ))
+                                        }
+                                    </ol>
+                                </nav>
+                            </>
+                        )
+                    }
+                </div>
                 {
                     categories?.length > 0 && (
                         <motion.div
@@ -158,7 +184,7 @@ export default function Categories() {
                             <div onClick={(e) => e.stopPropagation()} className="bg-white p-2 rounded-lg max-w-md">
                                 <div className="overflow-y-auto p-2" style={{ maxHeight: 'calc(100vh - 100px)' }}>
                                     <h3 className="text-center mb-4 font-semibold border-b pb-2">ایجاد دسته بندی</h3>
-                                    
+
                                     <div className="w-[300px] h-[200px]">
                                         <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories" width={300} height={200} />
                                     </div>
