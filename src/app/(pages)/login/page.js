@@ -8,13 +8,12 @@ import toast from "react-hot-toast"
 import { useRouter } from "next/navigation";
 import ChooseRole from "@/components/client/login/chooseRole";
 import { ROLES } from "@/helpers/roles";
-import { useAuth } from "@/hooks/useAuth";
+import { getClientSession } from "@/helpers/sessions";
 
 export default function Login() {
 
     const { push } = useRouter()
-    const { user } = useAuth()
-    
+
     const [timeLeft, { start, pause, resume, reset }] = useCountDown(2 * 60 * 1000, 1000)
 
     const [loading, setLoading] = useState(false)
@@ -50,9 +49,12 @@ export default function Login() {
     const otp4Ref = useRef()
 
     useEffect(() => {
-        if (user?.phone) {
-            return push("/")
-        }
+        getClientSession()
+            .then(res => res.json())
+            .then(user => {
+                if (user)
+                    return push("/")
+            })
     }, [])
 
     useEffect(() => {
@@ -124,7 +126,6 @@ export default function Login() {
 
             const body = await res.json()
             if (res.ok) {
-                localStorage.setItem("user", JSON.stringify(body))
                 resolve(body)
             } else {
                 reject(body)

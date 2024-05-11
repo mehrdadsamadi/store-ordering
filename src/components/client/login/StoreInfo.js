@@ -1,5 +1,5 @@
 import Map from "@/components/common/Map";
-import { useAuth } from "@/hooks/useAuth";
+import { getClientSession } from "@/helpers/sessions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 export default function StoreInfo({ setLoading }) {
 
     const { push } = useRouter()
-    const {user: {phone}} = useAuth()
 
     const [storeLoc, setStoreLoc] = useState([35.715298, 51.404343])
     const [storeName, setStoreName] = useState('')
@@ -33,7 +32,7 @@ export default function StoreInfo({ setLoading }) {
 
         fetch("https://iran-locations-api.ir/api/v1/fa/states")
             .then(res => res.json())
-            .then(data => {setAllProcvinces(data); setProvince(data[0].name)})
+            .then(data => { setAllProcvinces(data); setProvince(data[0].name) })
             .finally(() => setLoading(false))
     }
 
@@ -42,39 +41,44 @@ export default function StoreInfo({ setLoading }) {
 
         fetch(`https://iran-locations-api.ir/api/v1/fa/cities?state=${province}`)
             .then(res => res.json())
-            .then(data => {setProvinceCities(data.cities); setCity(data.cities[0].name)})
+            .then(data => { setProvinceCities(data.cities); setCity(data.cities[0].name) })
             .finally(() => setLoading(false))
     }
 
-    const submitStoreInfo = async (e) => {
+    const submitStoreInfo = (e) => {
         e.preventDefault();
 
         setLoading(true)
 
-        const storeInfoPromise = new Promise(async (resolve, reject) => {
+        getClientSession()
+            .then(res => res.json())
+            .then(async user => {
 
-            const res = await fetch("/api/users/store-info", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: storeName, province, city, address, location: storeLoc, phone }),
+                const storeInfoPromise = new Promise(async (resolve, reject) => {
+
+                    const res = await fetch("/api/users/store-info", {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: storeName, province, city, address, location: storeLoc, phone: user.phone }),
+                    })
+
+                    const body = await res.json()
+                    res.ok ? resolve(body) : reject(body)
+                })
+
+                await toast.promise(
+                    storeInfoPromise,
+                    {
+                        loading: 'در حال ثبت اطلاعات',
+                        success: ({ message }) => message,
+                        error: ({ error }) => error,
+                    }
+                )
+                    .then(() => {
+                        return push("/")
+                    })
+                    .finally(() => setLoading(false))
             })
-
-            const body = await res.json()
-            res.ok ? resolve(body) : reject(body)
-        })
-
-        await toast.promise(
-            storeInfoPromise,
-            {
-                loading: 'در حال ثبت اطلاعات',
-                success: ({ message }) => message,
-                error: ({ error }) => error,
-            }
-        )
-            .then(() => {
-                return push("/")
-            })
-            .finally(() => setLoading(false))
     }
 
     return (

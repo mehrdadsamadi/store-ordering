@@ -53,8 +53,6 @@ export default function ChooseRole({ setLoading, phone }) {
             }
         )
             .then(() => {
-                localStorage.setItem("user", JSON.stringify({ first_name: firstName, last_name: lastName, role, phone }))
-
                 if(role === ROLES.DRIVER) {
                     return push("/")
                 } else {

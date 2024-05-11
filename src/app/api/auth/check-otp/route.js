@@ -1,5 +1,7 @@
 import connectMongo from "@/helpers/connectMongo"
+import Session from "@/models/session.model";
 import User from "@/models/user.model";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -23,6 +25,13 @@ export async function POST(req) {
         }
 
         const {first_name, last_name, phone, role} = user
+
+        const oneWeek = 7 * 24 * 60 * 60 * 1000
+
+        await Session.create({phone, role, expire: Date.now() + oneWeek})
+
+        cookies().set('user', JSON.stringify({phone, first_name, last_name, role}), { expires: Date.now() + oneWeek })
+        
         return NextResponse.json({first_name, last_name, phone, role})
         
     } catch (error) {
