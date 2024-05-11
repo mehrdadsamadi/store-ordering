@@ -4,10 +4,10 @@ import { motion } from "framer-motion"
 import EditableImage from "@/components/common/EditableImage"
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon"
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon"
-import LoadingIcon from "@/components/icons/LoadingIcon"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
+import Loading from "@/components/common/Loading"
 
 export default function Categories() {
 
@@ -168,16 +168,7 @@ export default function Categories() {
                         </motion.div>
                     )
                 }
-                {
-                    loading && (
-                        <div className="inset-0 bg-black/20 flex items-center justify-center absolute rounded-md">
-                            <div className="border border-gray-300 bg-gray-50/30 px-4 py-2 text-center text-gray-900 rounded-lg flex flex-col items-center justify-center">
-                                <LoadingIcon />
-                                <p className="mt-2 font-semibold cursor-default">منتظر بمانید</p>
-                            </div>
-                        </div>
-                    )
-                }
+                <Loading loading={loading} />
                 {
                     showPopup && (
                         <div onClick={() => setShowPopup(false)} className="fixed inset-0 bg-black/30 flex items-center justify-center">

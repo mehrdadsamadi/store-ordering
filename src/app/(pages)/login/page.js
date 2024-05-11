@@ -2,13 +2,13 @@
 
 import { motion } from "framer-motion"
 import useCountDown from 'react-countdown-hook';
-import LoadingIcon from "@/components/icons/LoadingIcon"
 import { useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation";
 import ChooseRole from "@/components/client/login/chooseRole";
 import { ROLES } from "@/helpers/roles";
 import { getClientSession } from "@/helpers/sessions";
+import Loading from "@/components/common/Loading";
 
 export default function Login() {
 
@@ -154,16 +154,7 @@ export default function Login() {
         <section>
             <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
                 <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
-                    {
-                        loading && (
-                            <div className="inset-0 bg-black/20 flex items-center justify-center absolute rounded-md z-50">
-                                <div className="border border-gray-300 bg-gray-50/30 px-4 py-2 text-center text-gray-900 rounded-lg flex flex-col items-center justify-center">
-                                    <LoadingIcon />
-                                    <p className="mt-2 font-semibold cursor-default">منتظر بمانید</p>
-                                </div>
-                            </div>
-                        )
-                    }
+                    <Loading loading={loading}/>
                     <div className="mx-auto flex w-full max-w-md flex-col space-y-8">
                         <div className="flex flex-col items-center justify-center text-center space-y-2">
                             <div className="font-semibold text-3xl">
