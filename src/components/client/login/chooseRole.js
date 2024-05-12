@@ -35,7 +35,7 @@ export default function ChooseRole({ setLoading, phone }) {
         const userBaseInfoPromise = new Promise(async (resolve, reject) => {
 
             const res = await fetch("/api/users", {
-                method: "POST",
+                method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ first_name: firstName, last_name: lastName, avatar: userImage, role, phone }),
             })

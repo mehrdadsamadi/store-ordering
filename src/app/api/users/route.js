@@ -1,10 +1,10 @@
 import connectMongo from "@/helpers/connectMongo";
+import { setCookie } from "@/helpers/cookies";
 import Session from "@/models/session.model";
 import User from "@/models/user.model";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server"
 
-export async function POST(req) {
+export async function PUT(req) {
     try {
         await connectMongo()
 
@@ -12,10 +12,9 @@ export async function POST(req) {
 
         await User.updateOne({ phone }, { first_name, last_name, role, avatar })
 
-        await Session.updateOne({phone}, {role})
+        await Session.updateOne({ phone }, { role })
 
-        const oneWeek = 7 * 24 * 60 * 60 * 1000
-        cookies().set('user', JSON.stringify({phone, first_name, last_name, role}), { expires: Date.now() + oneWeek })
+        setCookie({ phone, first_name, last_name, role, avatar })
 
         return NextResponse.json({ message: "اطلاعات شما با موفقیت ثبت شد" })
     } catch (error) {

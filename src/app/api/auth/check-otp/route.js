@@ -1,7 +1,7 @@
 import connectMongo from "@/helpers/connectMongo"
+import { setCookie } from "@/helpers/cookies";
 import Session from "@/models/session.model";
 import User from "@/models/user.model";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -24,13 +24,13 @@ export async function POST(req) {
             return NextResponse.json({ error: "کد شما منقضی شده است ، کد جدید دریافت کنید" }, { status: 401 })
         }
 
-        const {first_name, last_name, phone, role} = user
+        const {first_name, last_name, phone, role, avatar} = user
 
-        const oneWeek = 7 * 24 * 60 * 60 * 1000
+        const oneWeek = 7 * 24 * 60 * 60 * 1000;
 
         await Session.create({phone, role, expire: Date.now() + oneWeek})
 
-        cookies().set('user', JSON.stringify({phone, first_name, last_name, role}), { expires: Date.now() + oneWeek })
+        setCookie({first_name, last_name, phone, role, avatar})
         
         return NextResponse.json({first_name, last_name, phone, role})
         

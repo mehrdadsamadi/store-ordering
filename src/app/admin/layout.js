@@ -2,11 +2,12 @@ import Sidebar from "@/components/admin/sidebar";
 import { useGetServerSession } from "@/hooks/useGetServerSession";
 import { redirect } from "next/navigation";
 
-export default function AdminLayout({children}) {
-    const {user} = useGetServerSession()
-    if(user.role !== "ADMIN") {
+export default function AdminLayout({ children }) {
+    const { user } = useGetServerSession()
+    if (user.role !== "ADMIN") {
         return redirect("/")
     }
+    
     return (
         <section className="p-4 flex gap-4 h-screen">
             <Sidebar />

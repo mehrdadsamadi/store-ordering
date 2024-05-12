@@ -8,6 +8,7 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import Loading from "@/components/common/Loading"
+import Dialog from "@/components/common/Dialog"
 
 export default function Categories() {
 
@@ -169,36 +170,21 @@ export default function Categories() {
                     )
                 }
                 <Loading loading={loading} />
-                {
-                    showPopup && (
-                        <div onClick={() => setShowPopup(false)} className="fixed inset-0 bg-black/30 flex items-center justify-center">
-                            <div onClick={(e) => e.stopPropagation()} className="bg-white p-2 rounded-lg max-w-md">
-                                <div className="overflow-y-auto p-2" style={{ maxHeight: 'calc(100vh - 100px)' }}>
-                                    <h3 className="text-center mb-4 font-semibold border-b pb-2">ایجاد دسته بندی</h3>
+                <Dialog showDialog={showPopup} setShowDialog={setShowPopup} title="ایجاد دسته بندی" onSubmit={handleCreateCategory} onClose={handleClosePopup}>
+                    <div className="w-[300px] h-[200px]">
+                        <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories"/>
+                    </div>
 
-                                    <div className="w-[300px] h-[200px]">
-                                        <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories" width={300} height={200} />
-                                    </div>
-
-                                    <div className="my-4 flex flex-col gap-2">
-                                        <div className="h-11">
-                                            <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} placeholder="نام دسته بندی" />
-                                        </div>
-
-                                        <div className="h-11">
-                                            <input type="text" value={currentClickedCategoryData?.name} placeholder="دسته بندی پدر" disabled />
-                                        </div>
-                                    </div>
-
-                                    <div className="sticky bottom-0 flex items-center justify-between">
-                                        <button type="button" onClick={handleCreateCategory} className="submit">ایجاد دسته بندی</button>
-                                        <button type="button" onClick={handleClosePopup}>انصراف</button>
-                                    </div>
-                                </div>
-                            </div>
+                    <div className="my-4 flex flex-col gap-2">
+                        <div className="h-11">
+                            <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} placeholder="نام دسته بندی" />
                         </div>
-                    )
-                }
+
+                        <div className="h-11">
+                            <input type="text" value={currentClickedCategoryData?.name} placeholder="دسته بندی پدر" disabled />
+                        </div>
+                    </div>
+                </Dialog>
             </div>
         </section>
     )
