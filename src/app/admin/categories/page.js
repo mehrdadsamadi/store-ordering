@@ -12,7 +12,7 @@ import Dialog from "@/components/common/Dialog"
 
 export default function Categories() {
 
-    const [showPopup, setShowPopup] = useState(false)
+    const [showDialog, setShowDialog] = useState(false)
     const [loading, setLoading] = useState(true)
     const [categories, setCategories] = useState([])
     const [fixCategories, setFixCategories] = useState([])
@@ -55,16 +55,16 @@ export default function Categories() {
         }
     }
 
-    const handleShowPopup = () => {
-        if (!showPopup) {
-            setShowPopup(true)
+    const handleShowDialog = () => {
+        if (!showDialog) {
+            setShowDialog(true)
         }
     }
 
-    const handleClosePopup = () => {
+    const handleCloseDialog = () => {
         setCategoryImage('')
         setCategoryName('')
-        setShowPopup(false)
+        setShowDialog(false)
     }
 
     const handleCategoryClick = (categoryId) => {
@@ -85,7 +85,7 @@ export default function Categories() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             })
-            handleClosePopup()
+            handleCloseDialog()
             fetchCategories()
 
             const body = await res.json()
@@ -106,7 +106,7 @@ export default function Categories() {
     return (
         <section className="gap-4 flex flex-col h-full">
             <div className="w-full p-4 rounded-lg bg-white flex justify-between">
-                <button className="submit" onClick={handleShowPopup}>ایجاد دسته بندی</button>
+                <button className="submit" onClick={handleShowDialog}>ایجاد دسته بندی</button>
 
                 <div className="flex items-center gap-2">
                     <input type="text" className="!mb-0" placeholder="جستجو دسته بندی" />
@@ -114,38 +114,36 @@ export default function Categories() {
                 </div>
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
-                <div className="flex gap-2 mb-4">
-                    {
-                        categoryParentsId?.length > 0 && (
-                            <>
-                                <button className="rounded-md flex items-center" onClick={handleBackClick}>
-                                    <ArrowRightIcon />
-                                    <p>برگرد عقب</p>
-                                </button>
-                                <nav className="flex px-5 py-3 text-primary border border-gray-300 rounded-lg" aria-label="Breadcrumb">
-                                    <ol className="inline-flex items-center">
-                                        {
-                                            categoryParentsId.map((pId, index) => (
-                                                <li className="" key={index}>
-                                                    <span className="flex items-center text-sm font-medium text-gray-500">
-                                                        {
-                                                            index !== 0 && (
-                                                                <div className="mx-2">
-                                                                    <ChevronLeftIcon />
-                                                                </div>
-                                                            )
-                                                        }
-                                                        {fixCategories.find(c => c._id === pId)?.name}
-                                                    </span>
-                                                </li>
-                                            ))
-                                        }
-                                    </ol>
-                                </nav>
-                            </>
-                        )
-                    }
-                </div>
+                {
+                    categoryParentsId?.length > 0 && (
+                        <div className="flex gap-2 mb-4">
+                            <button className="rounded-md flex items-center" onClick={handleBackClick}>
+                                <ArrowRightIcon />
+                                <p>برگرد عقب</p>
+                            </button>
+                            <nav className="flex px-5 py-3 text-primary border border-gray-300 rounded-lg" aria-label="Breadcrumb">
+                                <ol className="inline-flex items-center">
+                                    {
+                                        categoryParentsId.map((pId, index) => (
+                                            <li className="" key={index}>
+                                                <span className="flex items-center text-sm font-medium text-gray-500">
+                                                    {
+                                                        index !== 0 && (
+                                                            <div className="mx-2">
+                                                                <ChevronLeftIcon />
+                                                            </div>
+                                                        )
+                                                    }
+                                                    {fixCategories.find(c => c._id === pId)?.name}
+                                                </span>
+                                            </li>
+                                        ))
+                                    }
+                                </ol>
+                            </nav>
+                        </div>
+                    )
+                }
                 {
                     categories?.length > 0 && (
                         <motion.div
@@ -158,7 +156,7 @@ export default function Categories() {
                             {
                                 categories.map(category => (
                                     <div key={category._id} onClick={() => handleCategoryClick(category._id)} className="grid grid-cols-3 items-center p-4 bg-gray-200 rounded-md cursor-pointer">
-                                        <Image src={category.image} alt="category image" className="rounded-full w-[50px] h-[50px]" width={50} height={50} />
+                                        <Image src={category.image} alt="category image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
                                         <div className="col-span-2 flex justify-between">
                                             <h3>{category.name}</h3>
                                             <ChevronLeftIcon />
@@ -170,9 +168,9 @@ export default function Categories() {
                     )
                 }
                 <Loading loading={loading} />
-                <Dialog showDialog={showPopup} setShowDialog={setShowPopup} title="ایجاد دسته بندی" onSubmit={handleCreateCategory} onClose={handleClosePopup}>
+                <Dialog showDialog={showDialog} setShowDialog={setShowDialog} title="ایجاد دسته بندی" onSubmit={handleCreateCategory} onClose={handleCloseDialog}>
                     <div className="w-[300px] h-[200px]">
-                        <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories"/>
+                        <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories" />
                     </div>
 
                     <div className="my-4 flex flex-col gap-2">

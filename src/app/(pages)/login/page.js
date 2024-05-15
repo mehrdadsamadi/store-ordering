@@ -34,7 +34,7 @@ export default function Login() {
             buttonText: "ثبت و ادامه"
         },
     ])
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(2)
     const [phone, setPhone] = useState('')
     const [resendButton, setResendButton] = useState(false)
 
@@ -154,7 +154,7 @@ export default function Login() {
         <section>
             <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
                 <div className="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
-                    <Loading loading={loading}/>
+                    <Loading loading={loading} />
                     <div className="mx-auto flex w-full max-w-md flex-col space-y-8">
                         <div className="flex flex-col items-center justify-center text-center space-y-2">
                             <div className="font-semibold text-3xl">
@@ -227,20 +227,21 @@ export default function Login() {
 
                                         {
                                             step === 2 && (
-                                                <div className="flex flex-row gap-2 items-center justify-center text-center text-sm font-mediums text-gray-500">
+                                                <div className="flex flex-col gap-2 items-center justify-center text-center text-sm font-mediums text-gray-500">
                                                     {
                                                         resendButton ? (
-                                                            <>
+                                                            <div className="flex gap-2">
                                                                 <p>کد برای شما ارسال نشد؟</p>
                                                                 <p className="flex flex-row items-center text-primary font-semibold cursor-pointer" onClick={() => getOtp({ resend: true })}>ارسال دوباره</p>
-                                                            </>
+                                                            </div>
                                                         ) : (
-                                                            <>
+                                                            <div className="flex gap-2">
                                                                 <p>ارسال مجدد کد تا: </p>
                                                                 <p className="flex flex-row items-center text-primary font-semibold cursor-pointer">{timeLeft / 1000} ثانیه دیگر</p>
-                                                            </>
+                                                            </div>
                                                         )
                                                     }
+                                                    <p className="font-semibold cursor-pointer" onClick={() => setStep(1)}>برای تغییر شماره همراه کلیک کنید</p>
                                                 </div>
                                             )
                                         }

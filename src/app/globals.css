@@ -13,3 +13,14 @@ body {
 a.active {
     @apply bg-gray-50 text-gray-950
 }
+
+td:first-child, th:first-child {
+    border-right-style: solid;
+    border-top-right-radius: 10px; 
+    border-bottom-right-radius: 10px;
+}
+td:last-child, th:last-child {
+    border-left-style: solid;
+    border-bottom-left-radius: 10px; 
+    border-top-left-radius: 10px; 
+}

@@ -4,7 +4,7 @@ import Image from "next/image"
 import toast from "react-hot-toast"
 import UploadIcon from "../icons/UploadIcon"
 
-export default function EditableImage({ link, setLink, folder = 'avatars' }) {
+export default function EditableImage({ link, setLink, folder = 'avatars', hiddenUploadText = false }) {
     const handleFileUpload = async (e) => {
         const files = e.target.files
         if (files.length > 0) {
@@ -38,7 +38,7 @@ export default function EditableImage({ link, setLink, folder = 'avatars' }) {
     }
 
     return (
-        <div className={`relative border border-dashed w-full h-full rounded-md overflow-hidden`}>
+        <div className={`relative border w-full h-full rounded-md overflow-hidden`}>
             {
                 link && (
                     <Image src={link} alt="avatar" className="rounded-md w-full h-full mx-auto mb-1" quality={100} width={120} height={120} />
@@ -46,7 +46,7 @@ export default function EditableImage({ link, setLink, folder = 'avatars' }) {
             }
             <label className="absolute top-0 right-0 left-0 bottom-0 flex justify-center items-center">
                 <input type="file" className="hidden" onChange={handleFileUpload} />
-                <div className="border border-gray-300 bg-gray-50/30 cursor-pointer px-4 py-2 text-center text-gray-900 rounded-lg flex flex-col items-center justify-center">
+                <div className={`border border-gray-300 bg-gray-50/30 cursor-pointer px-4 py-2 text-center text-gray-900 rounded-lg flex flex-col items-center justify-center ${hiddenUploadText && 'hidden'}`}>
                     <UploadIcon />
                     <p className="mt-2 font-semibold">آپلود تصویر</p>
                 </div>
