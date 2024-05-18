@@ -34,7 +34,7 @@ export default function Login() {
             buttonText: "ثبت و ادامه"
         },
     ])
-    const [step, setStep] = useState(2)
+    const [step, setStep] = useState(1)
     const [phone, setPhone] = useState('')
     const [resendButton, setResendButton] = useState(false)
 

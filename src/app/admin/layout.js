@@ -12,7 +12,7 @@ export default function AdminLayout({ children }) {
     return (
         <section className="p-4 flex gap-4 h-screen">
             <Sidebar />
-            <div className="p-4 bg-gray-200 rounded-2xl w-full overflow-y-auto overflow-x-hidden">
+            <div className="p-4 bg-gray-200 rounded-2xl w-full overflow-hidden">
                 {children}
             </div>
         </section>

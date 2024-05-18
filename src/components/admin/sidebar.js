@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import EditableImage from "../common/EditableImage";
 import toast from "react-hot-toast";
 import UsersIcon from "../icons/usersIcon";
+import ListIcon from "../icons/ListIcon";
 
 export default function Sidebar() {
 
@@ -79,6 +80,10 @@ export default function Sidebar() {
                 <Link href={"/admin/brands"} className={`${path.includes('brands') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
                     <BrandIcon />
                     <h3 className="col-span-2">برند ها</h3>
+                </Link>
+                <Link href={"/admin/specifications"} className={`${path.includes('specifications') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
+                    <ListIcon />
+                    <h3 className="col-span-2">مشخصات</h3>
                 </Link>
                 <Link href={"/admin/users"} className={`${path.includes('users') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
                     <UsersIcon />
