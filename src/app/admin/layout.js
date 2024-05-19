@@ -1,11 +1,11 @@
 import Sidebar from "@/components/admin/sidebar";
 import { useGetServerSession } from "@/hooks/useGetServerSession";
 import { redirect } from "next/navigation";
-import { motion } from "framer-motion"
+import { ROLES } from "@/helpers/roles";
 
 export default function AdminLayout({ children }) {
     const { user } = useGetServerSession()
-    if (user.role !== "ADMIN") {
+    if (user?.role !== ROLES.ADMIN) {
         return redirect("/")
     }
 

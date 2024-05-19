@@ -11,10 +11,10 @@ const specSchema = new Schema({
 })
 
 const specificationSchema = new Schema({
-    brandId: { type: Types.ObjectId, ref: "brand" },
-    categoryId: { type: Types.ObjectId, ref: "category" },
+    brand: { type: Types.ObjectId, ref: "brand" },
+    category: { type: Types.ObjectId, ref: "category" },
+    product: { type: Types.ObjectId, ref: "product" },
     specifications: { type: [specSchema], required: true }
-    // productId: { type: Types.ObjectId, ref: "product" },
 })
 
 const Specification = models?.specification || model("specification", specificationSchema)

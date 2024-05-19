@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import useCountDown from 'react-countdown-hook';
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation";
 import ChooseRole from "@/components/client/login/chooseRole";
@@ -48,7 +48,7 @@ export default function Login() {
     const otp3Ref = useRef()
     const otp4Ref = useRef()
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         getClientSession()
             .then(res => res.json())
             .then(user => {
