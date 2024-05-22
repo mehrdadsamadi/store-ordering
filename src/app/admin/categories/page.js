@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import Loading from "@/components/common/Loading"
 import Dialog from "@/components/common/Dialog"
+import Alert from "@/components/common/Alert"
 
 export default function Categories() {
 
@@ -145,7 +146,7 @@ export default function Categories() {
                     )
                 }
                 {
-                    categories?.length > 0 && (
+                    categories?.length > 0 ? (
                         <motion.div
                             className="grid grid-cols-6 gap-2 categories-container"
                             initial={{ x: -200, opacity: 0 }}
@@ -156,8 +157,8 @@ export default function Categories() {
                             {
                                 categories.map(category => (
                                     <div key={category._id} onClick={() => handleCategoryClick(category._id)} className="grid grid-cols-3 items-center p-4 bg-gray-200 rounded-md cursor-pointer">
-                                        <Image src={category.image} alt="category image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
-                                        <div className="col-span-2 flex justify-between">
+                                        <Image src={category?.image || "/placeholders/img-placeholder.webp"} alt="category image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
+                                        <div className="col-span-2 flex justify-between items-center">
                                             <h3>{category.name}</h3>
                                             <ChevronLeftIcon />
                                         </div>
@@ -165,6 +166,8 @@ export default function Categories() {
                                 ))
                             }
                         </motion.div>
+                    ) : (
+                        <Alert text="تا کنون دسته بندی اضافه نشده است"/>
                     )
                 }
                 <Loading loading={loading} />

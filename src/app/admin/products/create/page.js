@@ -4,6 +4,7 @@ import CustomEditor from "@/components/common/CustomEditor";
 import EditableImage from "@/components/common/EditableImage";
 import Loading from "@/components/common/Loading";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function CreateProduct() {
 
@@ -12,10 +13,11 @@ export default function CreateProduct() {
     const [brand, setBrand] = useState("")
     const [category, setCategory] = useState("")
     const [slug, setSlug] = useState("")
-    const [wholesale_quantity, setWholesale_quantity] = useState(0)
-    const [wholesale_price, setWholesale_price] = useState('')
-    const [retail_price, setRetail_price] = useState('')
-    const [available, setAvailable] = useState(false)
+    const [description, setDescription] = useState('<h1>در این قسمت میتوانید به صورت کامل توضیحات همراه با تصاویر برای محصول قرار دهید.</h1>')
+    // const [wholesale_quantity, setWholesale_quantity] = useState(0)
+    // const [wholesale_price, setWholesale_price] = useState('')
+    // const [retail_price, setRetail_price] = useState('')
+    // const [available, setAvailable] = useState(false)
 
     const [brands, setBrands] = useState([])
     const [categories, setCategories] = useState([])
@@ -32,17 +34,58 @@ export default function CreateProduct() {
 
         fetch(`/api/admin/brands`)
             .then(res => res.json())
-            .then(data => setBrands(data))
+            .then(data => {
+                setBrands(data)
+                setBrand(data[0]._id)
+            })
             .finally(() => setLoading(false))
     }
 
-    const fetchCategories = (name, setFunc) => {
+    const fetchCategories = () => {
         setLoading(true)
 
         fetch(`/api/admin/categories`)
             .then(res => res.json())
-            .then(data => setCategories(data))
+            .then(data => {
+                setCategories(data)
+                setCategory(data[0]._id)
+            })
             .finally(() => setLoading(false))
+    }
+
+    const handleCreateProduct = async () => {
+        const createProductPromise = new Promise(async (resolve, reject) => {
+            const data = { name, images, brand, category, slug, description }
+
+            const res = await fetch("/api/admin/products", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+
+            resetStates()
+
+            const body = await res.json()
+            res.ok ? resolve(body) : reject(body)
+        })
+
+        await toast.promise(
+            createProductPromise,
+            {
+                loading: 'در حال ایجاد محصول ...',
+                success: ({ message }) => message,
+                error: ({ error }) => error,
+            }
+        )
+    }
+
+    const resetStates = () => {
+        setImages([])
+        setName("")
+        setBrand("")
+        setCategory("")
+        setSlug("")
+        setDescription('<h1>در این قسمت میتوانید به صورت کامل توضیحات همراه با تصاویر برای محصول قرار دهید.</h1>')
     }
 
     const setImagesByPush = (imgPath, imgIndex) => {
@@ -60,7 +103,7 @@ export default function CreateProduct() {
     return (
         <section className="h-full">
             <div className="w-full p-4 rounded-lg bg-white h-full relative flex flex-col justify-between">
-                <Loading loading={loading}/>
+                <Loading loading={loading} />
                 <form>
                     <div className="p-4 bg-gray-200 rounded-lg overflow-x-auto grid grid-cols-6 items-center">
                         {
@@ -95,7 +138,7 @@ export default function CreateProduct() {
                                             {
                                                 brands?.length > 0 &&
                                                 brands.map(b => (
-                                                    <option key={b._id} value={b.name}>{b.name}</option>
+                                                    <option key={b._id} value={b._id}>{b.name}</option>
                                                 ))
                                             }
                                         </select>
@@ -108,7 +151,7 @@ export default function CreateProduct() {
                                             {
                                                 categories?.length > 0 &&
                                                 categories.map(c => (
-                                                    <option key={c._id} value={c.name}>{c.name}</option>
+                                                    <option key={c._id} value={c._id}>{c.name}</option>
                                                 ))
                                             }
                                         </select>
@@ -119,11 +162,11 @@ export default function CreateProduct() {
                             <div>
                                 <label htmlFor="">اسلاگ</label>
                                 <div className="h-11">
-                                    <input type="text" value={slug} onChange={e => setSlug(e.target.value)} placeholder="اسلاگ" />
+                                    <input type="text" value={slug} onChange={e => setSlug(e.target.value.replace(" ", "-"))} placeholder="اسلاگ" />
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-2">
+                            {/* <div className="grid grid-cols-2 gap-2">
                                 <div>
                                     <label htmlFor="">تایین مقدار عمده فروشی</label>
                                     <div className="h-11">
@@ -152,15 +195,15 @@ export default function CreateProduct() {
                                         <label htmlFor="red-checkbox" className="ms-2 font-medium text-primary">محصول موجود است</label>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                         </div>
                         <div>
-                            <CustomEditor />
+                            <CustomEditor setData={setDescription} data={description} />
                         </div>
                     </div>
                 </form>
-                <button disabled className="w-full" type="button">ایجاد محصول</button>
+                <button disabled={(images?.length === 0 || !brand || !category || !slug)} onClick={handleCreateProduct} className="w-full" type="button">ایجاد محصول</button>
             </div>
         </section>
     )

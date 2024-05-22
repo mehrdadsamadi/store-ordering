@@ -8,9 +8,10 @@ import { getClientSession } from "@/helpers/sessions";
 import { useEffect, useState } from "react";
 import EditableImage from "../common/EditableImage";
 import toast from "react-hot-toast";
-import UsersIcon from "../icons/usersIcon";
+import UsersIcon from "../icons/UsersIcon";
 import ListIcon from "../icons/ListIcon";
 import CubeIcon from "../icons/CubeIcon";
+import SwatchIcon from "../icons/SwatchIcon";
 
 export default function Sidebar() {
 
@@ -89,6 +90,10 @@ export default function Sidebar() {
                 <Link href={"/admin/specifications"} className={`${path.includes('specifications') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
                     <ListIcon />
                     <h3 className="col-span-2">مشخصات</h3>
+                </Link>
+                <Link href={"/admin/features"} className={`${path.includes('features') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
+                    <SwatchIcon />
+                    <h3 className="col-span-2">ویژگی ها</h3>
                 </Link>
                 <Link href={"/admin/users"} className={`${path.includes('users') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
                     <UsersIcon />

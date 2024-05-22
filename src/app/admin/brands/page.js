@@ -6,6 +6,9 @@ import Loading from "@/components/common/Loading"
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import toast from "react-hot-toast"
+import TrashIcon from "@/components/icons/TrashIcon"
+import ConfirmBtn from "@/components/common/ConfirmBtn"
+import Alert from "@/components/common/Alert"
 
 export default function Brands() {
     const [showDialog, setShowDialog] = useState(false)
@@ -39,6 +42,30 @@ export default function Brands() {
         setShowDialog(false)
     }
 
+    const handleRemoveBrand = async (brandId) => {
+        const removeBrandPromise = new Promise(async (resolve, reject) => {
+            const res = await fetch("/api/admin/brands", {
+                method: "DELETE",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ _id: brandId }),
+            })
+
+            fetchBrands()
+
+            const body = await res.json()
+            res.ok ? resolve(body) : reject(body)
+        })
+
+        await toast.promise(
+            removeBrandPromise,
+            {
+                loading: 'در حال حذف برند ...',
+                success: ({ message }) => message,
+                error: ({ error }) => error,
+            }
+        )
+    }
+
     const handleCreateBrand = async () => {
         const createBrandPromise = new Promise(async (resolve, reject) => {
             const data = { name: brandName, image: brandImage }
@@ -58,7 +85,7 @@ export default function Brands() {
         await toast.promise(
             createBrandPromise,
             {
-                loading: 'در حال ایجاد دسته بندی ...',
+                loading: 'در حال ایجاد برند ...',
                 success: ({ message }) => message,
                 error: ({ error }) => error,
             }
@@ -76,7 +103,7 @@ export default function Brands() {
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
                 {
-                    brands?.length > 0 && (
+                    brands?.length > 0 ? (
                         <motion.div
                             className="grid grid-cols-6 gap-2 brands-container"
                             initial={{ x: -200, opacity: 0 }}
@@ -86,12 +113,19 @@ export default function Brands() {
                             {
                                 brands.map(brand => (
                                     <div key={brand._id} className="grid grid-cols-3 items-center p-4 bg-gray-200 rounded-md">
-                                        <Image src={brand.image} alt="brand image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
-                                        <h3 className="col-span-2">{brand.name}</h3>
+                                        <Image src={brand?.image || "/placeholders/img-placeholder.webp"} alt="brand image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
+                                        <div className="col-span-2 flex justify-between items-center">
+                                            <h3 className="col-span-2">{brand.name}</h3>
+                                            <ConfirmBtn onConfirm={() => handleRemoveBrand(brand._id)} className="!p-2 rounded-full text-center hover:bg-gray-300 cursor-pointer border-none">
+                                                <TrashIcon />
+                                            </ConfirmBtn>
+                                        </div>
                                     </div>
                                 ))
                             }
                         </motion.div>
+                    ) : (
+                        <Alert text="تا کنون برندی اضافه نشده است"/>
                     )
                 }
                 <Loading loading={loading} />
