@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^6.3.0",
+    "@tanstack/react-table": "^8.17.3",
     "ckeditor5-custom-build": "file:ckeditor5",
     "framer-motion": "^11.1.7",
     "leaflet": "^1.9.4",

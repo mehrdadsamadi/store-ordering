@@ -2,6 +2,9 @@
 
 import Loading from "@/components/common/Loading";
 import Table from "@/components/common/Table";
+import EditIcon from "@/components/icons/EditIcon";
+import TrashIcon from "@/components/icons/TrashIcon";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -9,6 +12,61 @@ export default function Products() {
 
     const [loading, setLoading] = useState(false)
     const [products, setProducts] = useState([])
+    const [columns, setColumns] = useState([
+        {
+            accessorKey: 'name',
+            header: 'نام',
+            id: 'name',
+            cell: ({ row: { original } }) => {
+                return (
+                    <div className="flex items-center gap-2">
+                        <Image width={50} height={50} className="w-10 h-10 rounded-full" src={original.images[0] || '/placeholders/user-placeholder.jpg'} alt="Jese image" />
+                        <div className="text-base">{original.name}</div>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: 'slug',
+            header: 'اسلاگ',
+            id: 'slug',
+        },
+        {
+            accessorKey: 'brand',
+            header: 'برند',
+            id: 'brand',
+            cell: ({ row: { original } }) => {
+                return (
+                    <span>{original.brand.name}</span>
+                );
+            },
+        },
+        {
+            accessorKey: 'category',
+            header: 'دسته بندی',
+            id: 'category',
+            cell: ({ row: { original } }) => {
+                return (
+                    <span>{original.category.name}</span>
+                );
+            },
+        },
+        {
+            accessorKey: 'actions',
+            header: '',
+            id: 'actions',
+            cell: ({ row: { original } }) => (
+                <div className="flex gap-2">
+                    <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
+                        <EditIcon />
+                    </button>
+                    <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
+                        <TrashIcon />
+                    </button>
+                </div>
+            ),
+        },
+    ])
 
     useEffect(() => {
         fetchProducts()
@@ -35,7 +93,7 @@ export default function Products() {
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
                 <Loading loading={loading} />
-                <Table data={products} headers={['نام', 'دسته بندی', 'برند', 'توضیحات', 'slug', 'مشخصات', 'مقدار عمده فروشی', 'قیمت عمده فروشی', 'قیمت تک فروشی', 'موجود']}/>
+                <Table data={products} columns={columns}/>
             </div>
         </section>
     )
