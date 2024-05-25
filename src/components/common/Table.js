@@ -33,37 +33,16 @@ export default function DataTable({ columns, data }) {
 
     return (
         <>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border-separate border-spacing-y-2">
-                <thead className="text-xs text-gray-700 uppercase dark:bg-primary dark:text-gray-400">
-                    {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id}>
-                            {headerGroup.headers.map(header => (
-                                <th
-                                    key={header.id}
-                                    className={`px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider`}
-                                >
-                                    {flexRender(header.column.columnDef.header, header.getContext())}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                    {table.getRowModel().rows.map(row => (
-                        <tr className='bg-gray-100' key={row.id}>
-                            {row.getVisibleCells().map(cell => (
-                                <td
-                                    key={cell.id}
-                                    className={`px-6 py-2 whitespace-nowrap text-sm text-gray-900`}
-                                >
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
             <div className="flex items-center py-2 gap-2">
+                <div className="grow">
+                    <input
+                        type="text"
+                        value={globalFilter ?? ''}
+                        onChange={e => setGlobalFilter(e.target.value)}
+                        placeholder="جستجو در کل جدول"
+                        className="px-4 py-2 border rounded w-full"
+                    />
+                </div>
                 <button
                     className='submit'
                     onClick={() => table.firstPage()}
@@ -100,7 +79,7 @@ export default function DataTable({ columns, data }) {
                     آخر جدول
                     <ChevronDoubleLeftIcon />
                 </button>
-                <div className='w-28'>
+                <div className='w-20'>
                     <select
                         className="button bg-gray-200 border border-gray-200 text-gray-900 text-sm rounded-lg block w-full"
                         value={table.getState().pagination.pageSize}
@@ -115,16 +94,38 @@ export default function DataTable({ columns, data }) {
                         ))}
                     </select>
                 </div>
-                <div className="grow">
-                    <input
-                        type="text"
-                        value={globalFilter ?? ''}
-                        onChange={e => setGlobalFilter(e.target.value)}
-                        placeholder="جستجو در کل جدول"
-                        className="px-4 py-2 border rounded w-full"
-                    />
-                </div>
             </div>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border-separate border-spacing-y-2">
+                <thead className="text-xs text-gray-700 uppercase dark:bg-primary dark:text-gray-400">
+                    {table.getHeaderGroups().map(headerGroup => (
+                        <tr key={headerGroup.id}>
+                            {headerGroup.headers.map(header => (
+                                <th
+                                    key={header.id}
+                                    className={`px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider`}
+                                >
+                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                    {table.getRowModel().rows.map(row => (
+                        <tr className='bg-gray-100' key={row.id}>
+                            {row.getVisibleCells().map(cell => (
+                                <td
+                                    key={cell.id}
+                                    className={`px-6 py-2 whitespace-nowrap text-sm text-gray-900`}
+                                >
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
         </>
     );
 };

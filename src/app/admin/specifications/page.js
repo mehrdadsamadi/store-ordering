@@ -31,7 +31,27 @@ export default function Specifications() {
             id: 'product',
             cell: ({ row: { original } }) => {
                 return (
-                    <span>{original.product.name}</span>
+                    <span>{original?.product?.name}</span>
+                );
+            },
+        },
+        {
+            accessorKey: 'category',
+            header: 'دسته بندی',
+            id: 'category',
+            cell: ({ row: { original } }) => {
+                return (
+                    <span>{original?.category?.name}</span>
+                );
+            },
+        },
+        {
+            accessorKey: 'brand',
+            header: 'برند',
+            id: 'brand',
+            cell: ({ row: { original } }) => {
+                return (
+                    <span>{original?.brand?.name}</span>
                 );
             },
         },

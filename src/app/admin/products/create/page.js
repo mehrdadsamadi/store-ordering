@@ -13,11 +13,8 @@ export default function CreateProduct() {
     const [brand, setBrand] = useState("")
     const [category, setCategory] = useState("")
     const [slug, setSlug] = useState("")
+    const [visible, setVisible] = useState(true)
     const [description, setDescription] = useState('<h1>در این قسمت میتوانید به صورت کامل توضیحات همراه با تصاویر برای محصول قرار دهید.</h1>')
-    // const [wholesale_quantity, setWholesale_quantity] = useState(0)
-    // const [wholesale_price, setWholesale_price] = useState('')
-    // const [retail_price, setRetail_price] = useState('')
-    // const [available, setAvailable] = useState(false)
 
     const [brands, setBrands] = useState([])
     const [categories, setCategories] = useState([])
@@ -55,7 +52,7 @@ export default function CreateProduct() {
 
     const handleCreateProduct = async () => {
         const createProductPromise = new Promise(async (resolve, reject) => {
-            const data = { name, images, brand, category, slug, description }
+            const data = { name, images, brand, category, slug, visible, description }
 
             const res = await fetch("/api/admin/products", {
                 method: "POST",
@@ -166,37 +163,13 @@ export default function CreateProduct() {
                                 </div>
                             </div>
 
-                            {/* <div className="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label htmlFor="">تایین مقدار عمده فروشی</label>
-                                    <div className="h-11">
-                                        <input type="number" value={wholesale_quantity} onChange={e => setWholesale_quantity(e.target.value)} placeholder="تایین مقدار عمده فروشی" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label htmlFor="">تایین قیمت عمده فروشی</label>
-                                    <div className="h-11">
-                                        <input type="text" value={wholesale_price} onChange={e => setWholesale_price(e.target.value)} placeholder="تایین قیمت عمده فروشی" />
-                                    </div>
+                            <div>
+                                <label htmlFor=""></label>
+                                <div className="flex items-center me-4">
+                                    <input id="red-checkbox" type="checkbox" checked={visible} value={visible} onChange={e => setVisible(!visible)} className="w-5 h-5 text-primary bg-gray-100 border-gray-300 rounded overflow-hidden" />
+                                    <label htmlFor="red-checkbox" className="ms-2 font-medium text-primary">این محصول قابل نمایش باشد؟</label>
                                 </div>
                             </div>
-
-                            <div className="grid grid-cols-2 gap-2 items-center">
-                                <div>
-                                    <label htmlFor="">قیمت محصول در حالت تک فروشی</label>
-                                    <div className="h-11">
-                                        <input type="text" value={retail_price} onChange={e => setRetail_price(e.target.value)} placeholder="قیمت محصول در حالت تک فروشی" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label htmlFor=""></label>
-                                    <div className="flex items-center me-4">
-                                        <input id="red-checkbox" type="checkbox" value={available} onChange={e => setAvailable(false)} className="w-5 h-5 text-primary bg-gray-100 border-gray-300 rounded overflow-hidden" />
-                                        <label htmlFor="red-checkbox" className="ms-2 font-medium text-primary">محصول موجود است</label>
-                                    </div>
-                                </div>
-                            </div> */}
-
                         </div>
                         <div>
                             <CustomEditor setData={setDescription} data={description} />

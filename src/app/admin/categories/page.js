@@ -10,8 +10,17 @@ import toast from "react-hot-toast"
 import Loading from "@/components/common/Loading"
 import Dialog from "@/components/common/Dialog"
 import Alert from "@/components/common/Alert"
+import * as Yup from "yup"
+import { useValidateFormSchema } from "@/hooks/useValidateFormSchema"
+import InputErrorMessage from "@/components/common/InputErrorMessage"
+
+const validationSchema = Yup.object().shape({
+    name: Yup.string().required('نام دسته بندی را وارد کنید'),
+});
 
 export default function Categories() {
+
+    const { validate, errors } = useValidateFormSchema()
 
     const [showDialog, setShowDialog] = useState(false)
     const [loading, setLoading] = useState(true)
@@ -32,7 +41,6 @@ export default function Categories() {
     }, [categoryParentsId])
 
     const fetchCategories = () => {
-        // setLoading(true)
 
         fetch("/api/admin/categories")
             .then(res => res.json())
@@ -78,16 +86,22 @@ export default function Categories() {
     }
 
     const handleCreateCategory = async () => {
+        const data = { name: categoryName, image: categoryImage, parent: currentClickedCategoryData?._id }
+
+        validate(validationSchema, data)
+
         const createCategoryPromise = new Promise(async (resolve, reject) => {
-            const data = { name: categoryName, image: categoryImage, parent: currentClickedCategoryData?._id }
 
             const res = await fetch("/api/admin/categories", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             })
-            handleCloseDialog()
-            fetchCategories()
+            
+            if(Object.keys(errors).length) {
+                handleCloseDialog()
+                fetchCategories()
+            }
 
             const body = await res.json()
             res.ok ? resolve(body) : reject(body)
@@ -156,7 +170,7 @@ export default function Categories() {
                         >
                             {
                                 categories.map(category => (
-                                    <div key={category._id} onClick={() => handleCategoryClick(category._id)} className="grid grid-cols-3 items-center p-4 bg-gray-200 rounded-md cursor-pointer">
+                                    <div key={category._id} onClick={() => handleCategoryClick(category._id)} className="grid grid-cols-3 items-center px-4 py-2 bg-gray-200 rounded-md cursor-pointer">
                                         <Image src={category?.image || "/placeholders/img-placeholder.webp"} alt="category image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
                                         <div className="col-span-2 flex justify-between items-center">
                                             <h3>{category.name}</h3>
@@ -167,18 +181,21 @@ export default function Categories() {
                             }
                         </motion.div>
                     ) : (
-                        <Alert text="تا کنون دسته بندی اضافه نشده است"/>
+                        <Alert text="تا کنون دسته بندی اضافه نشده است" />
                     )
                 }
                 <Loading loading={loading} />
-                <Dialog showDialog={showDialog} setShowDialog={setShowDialog} title="ایجاد دسته بندی" onSubmit={handleCreateCategory} onClose={handleCloseDialog}>
+                <Dialog showDialog={showDialog} setShowDialog={setShowDialog} requireFields={[categoryName]} title="ایجاد دسته بندی" onSubmit={handleCreateCategory} onClose={handleCloseDialog}>
                     <div className="w-[300px] h-[200px]">
                         <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories" />
                     </div>
 
                     <div className="my-4 flex flex-col gap-2">
-                        <div className="h-11">
-                            <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} placeholder="نام دسته بندی" />
+                        <div>
+                            <div className="h-11">
+                                <input type="text" value={categoryName} onChange={e => setCategoryName(e.target.value)} placeholder="نام دسته بندی" />
+                            </div>
+                            <InputErrorMessage message={errors?.name}/>
                         </div>
 
                         <div className="h-11">

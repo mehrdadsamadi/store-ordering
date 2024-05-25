@@ -9,8 +9,18 @@ import toast from "react-hot-toast"
 import TrashIcon from "@/components/icons/TrashIcon"
 import ConfirmBtn from "@/components/common/ConfirmBtn"
 import Alert from "@/components/common/Alert"
+import * as Yup from "yup"
+import { useValidateFormSchema } from "@/hooks/useValidateFormSchema"
+import InputErrorMessage from "@/components/common/InputErrorMessage"
+
+const validationSchema = Yup.object().shape({
+    name: Yup.string().required('نام برند را وارد کنید'),
+});
 
 export default function Brands() {
+
+    const { validate, errors } = useValidateFormSchema()
+
     const [showDialog, setShowDialog] = useState(false)
     const [loading, setLoading] = useState(true)
     const [brands, setBrands] = useState([])
@@ -67,16 +77,22 @@ export default function Brands() {
     }
 
     const handleCreateBrand = async () => {
+        const data = { name: brandName, image: brandImage }
+
+        validate(validationSchema, data)
+
         const createBrandPromise = new Promise(async (resolve, reject) => {
-            const data = { name: brandName, image: brandImage }
 
             const res = await fetch("/api/admin/brands", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             })
-            handleCloseDialog()
-            fetchBrands()
+
+            if (Object.keys(errors).length) {
+                handleCloseDialog()
+                fetchBrands()
+            }
 
             const body = await res.json()
             res.ok ? resolve(body) : reject(body)
@@ -112,7 +128,7 @@ export default function Brands() {
                         >
                             {
                                 brands.map(brand => (
-                                    <div key={brand._id} className="grid grid-cols-3 items-center p-4 bg-gray-200 rounded-md">
+                                    <div key={brand._id} className="grid grid-cols-3 items-center px-4 py-2 bg-gray-200 rounded-md">
                                         <Image src={brand?.image || "/placeholders/img-placeholder.webp"} alt="brand image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
                                         <div className="col-span-2 flex justify-between items-center">
                                             <h3 className="col-span-2">{brand.name}</h3>
@@ -125,18 +141,21 @@ export default function Brands() {
                             }
                         </motion.div>
                     ) : (
-                        <Alert text="تا کنون برندی اضافه نشده است"/>
+                        <Alert text="تا کنون برندی اضافه نشده است" />
                     )
                 }
                 <Loading loading={loading} />
-                <Dialog showDialog={showDialog} setShowDialog={setShowDialog} title="ایجاد برند" onSubmit={handleCreateBrand} onClose={handleCloseDialog}>
+                <Dialog showDialog={showDialog} setShowDialog={setShowDialog} requireFields={[brandName]} title="ایجاد برند" onSubmit={handleCreateBrand} onClose={handleCloseDialog}>
                     <div className="w-[300px] h-[200px]">
                         <EditableImage link={brandImage} setLink={setBrandImage} folder="brands" />
                     </div>
 
                     <div className="my-4 flex flex-col gap-2">
-                        <div className="h-11">
-                            <input type="text" value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="نام برند" />
+                        <div>
+                            <div className="h-11">
+                                <input type="text" value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="نام برند" />
+                            </div>
+                            <InputErrorMessage message={errors?.name}/>
                         </div>
                     </div>
                 </Dialog>

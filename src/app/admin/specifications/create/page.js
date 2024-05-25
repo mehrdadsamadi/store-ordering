@@ -75,7 +75,7 @@ export default function CreateSpecifications() {
     const fetchSectionItems = () => {
         setLoading(true)
 
-        fetch(`/api/admin/${selectedSection}`)
+        fetch(`/api/admin/${selectedSection?.fetchName}`)
             .then(res => res.json())
             .then(data => setSectionItems(data))
             .finally(() => setLoading(false))
@@ -86,16 +86,9 @@ export default function CreateSpecifications() {
 
             let data = {}
 
-            if(selectedSection === 'products') {
-                data.product = selectedItem._id
-            } else if(selectedSection === 'categories') {
-                data.category = selectedItem._id
-            } else {
-                data.brand = selectedItem._id
-            }
-
+            data[selectedSection?.dataName] = selectedItem._id
             data.specifications = specifications
-
+            
             const res = await fetch("/api/admin/specifications", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
@@ -151,9 +144,9 @@ export default function CreateSpecifications() {
 
                     <div className="grid grid-cols-3 gap-4 mt-4 h-full">
                         <div className="flex flex-col items-center gap-4">
-                            <div onClick={() => setSelectedSection('products')} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">محصول</div>
-                            <div onClick={() => setSelectedSection('categories')} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">دسته بندی</div>
-                            <div onClick={() => setSelectedSection('brands')} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">برند</div>
+                            <div onClick={() => setSelectedSection({dataName:'product', fetchName: 'products'})} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">محصول</div>
+                            <div onClick={() => setSelectedSection({dataName:'category', fetchName: 'categories'})} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">دسته بندی</div>
+                            <div onClick={() => setSelectedSection({dataName:'brand', fetchName: 'brands'})} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">برند</div>
                         </div>
                         <div className="relative overflow-y-auto">
                             <Loading loading={loading} />

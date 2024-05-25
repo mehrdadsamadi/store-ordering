@@ -9,6 +9,7 @@ const productSchema = new Schema({
     name: { type: String, required: true },
     images: {type: [String], required: true},
     slug: {type: String, required: true},
+    visible: {type: Boolean, default: true},
 })
 
 const Product = models?.product || model("product", productSchema)

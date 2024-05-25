@@ -1,8 +1,10 @@
 "use client"
 
+import Badge from "@/components/common/Badge";
 import Loading from "@/components/common/Loading";
 import Table from "@/components/common/Table";
 import EditIcon from "@/components/icons/EditIcon";
+import EyeIcon from "@/components/icons/EyeIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,6 +32,16 @@ export default function Products() {
             accessorKey: 'slug',
             header: 'اسلاگ',
             id: 'slug',
+        },
+        {
+            accessorKey: 'visible',
+            header: 'قابل نمایش',
+            id: 'visible',
+            cell: ({ row: { original } }) => {
+                return (
+                    <Badge>{original.visible ? "بله" : 'خیر'}</Badge>
+                );
+            },
         },
         {
             accessorKey: 'brand',
@@ -60,9 +72,12 @@ export default function Products() {
                     <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
                         <EditIcon />
                     </button>
-                    <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
-                        <TrashIcon />
+                    <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
+                        <EyeIcon />
                     </button>
+                    {/* <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
+                        <TrashIcon />
+                    </button> */}
                 </div>
             ),
         },
@@ -93,7 +108,7 @@ export default function Products() {
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
                 <Loading loading={loading} />
-                <Table data={products} columns={columns}/>
+                <Table data={products} columns={columns} />
             </div>
         </section>
     )

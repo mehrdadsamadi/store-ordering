@@ -2,6 +2,7 @@ import connectMongo from "@/helpers/connectMongo";
 import { ROLES } from "@/helpers/roles";
 import { useGetServerSession } from "@/hooks/useGetServerSession";
 import Feature from "@/models/feature.model";
+import Product from "@/models/product.model";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -29,8 +30,12 @@ export async function POST(req) {
 
         const body = await req.json()
 
-        await Feature.create(body)
-        
+        const featureDoc = await Feature.create(body)
+
+        if (body?.product) {
+            await Product.findByIdAndUpdate(body.product, { features: featureDoc._id })
+        }
+
         return NextResponse.json({message: "ویژگی ها با موفقیت ایجاد شد"})
     } catch (error) {
         console.log(error);

@@ -1,7 +1,7 @@
 
 button, .button{
     @apply flex justify-center items-center gap-2 w-fit text-gray-700;
-    @apply border border-gray-300 rounded-xl !px-6 !py-2;
+    @apply border border-gray-300 rounded-lg !px-6 !py-2;
 }
 
 button[type="submit"], .submit {
