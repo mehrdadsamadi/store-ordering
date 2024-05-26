@@ -32,14 +32,28 @@ export async function POST(req) {
 
         const body = await req.json()
 
-        const specDoc = await Specification.create(body)
-
+        let query = {}
         if (body?.product) {
-            await Product.findByIdAndUpdate(body.product, { specs: specDoc._id })
+            query.product = body.product
         } else if (body?.category) {
-            await Category.findByIdAndUpdate(body.category, { specs: specDoc._id })
+            query.category = body.category
         } else {
-            await Brand.findByIdAndUpdate(body.brand, { specs: specDoc._id })
+            query.brand = body.brand
+        }
+
+        const existSpec = await Specification.findOne(query)
+        if (existSpec) {
+            await Specification.updateOne({_id: existSpec._id}, {$push: {specifications: body.specifications}})
+        } else {
+            const specDoc = await Specification.create(body)
+    
+            if (body?.product) {
+                await Product.findByIdAndUpdate(body.product, { specs: specDoc._id })
+            } else if (body?.category) {
+                await Category.findByIdAndUpdate(body.category, { specs: specDoc._id })
+            } else {
+                await Brand.findByIdAndUpdate(body.brand, { specs: specDoc._id })
+            }
         }
 
         return NextResponse.json({ message: "مشخصات با موفقیت ایجاد شد" })

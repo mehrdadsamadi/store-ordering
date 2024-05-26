@@ -188,7 +188,7 @@ export default function CreateFeatures() {
 
                 </div>
 
-                <button disabled={!features?.length} onClick={handleSubmitFeatures} className="w-full" type="button">ثبت مشخصات</button>
+                <button disabled={!features?.length} onClick={handleSubmitFeatures} className="w-full" type="button">ثبت ویژگی ها</button>
             </div>
         </section>
     )

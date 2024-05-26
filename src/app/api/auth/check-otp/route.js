@@ -28,6 +28,7 @@ export async function POST(req) {
 
         const oneWeek = 7 * 24 * 60 * 60 * 1000;
 
+        await Session.deleteOne({phone})
         await Session.create({phone, role, expire: Date.now() + oneWeek})
 
         setCookie({first_name, last_name, phone, role, avatar})

@@ -5,6 +5,7 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import EditableImage from "@/components/common/EditableImage";
+import { formatPriceNumber } from "@/helpers/formatPriceInput";
 
 export default function AddFeatures({ title, addLabel, props, onAddFeature, onRemoveFeatureItem, onChangeFeature, onRemoveFeature }) {
 
@@ -58,6 +59,11 @@ export default function AddFeatures({ title, addLabel, props, onAddFeature, onRe
                                     <div className="h-11">
                                         <input type="text" value={feature.wholesale_price} onChange={e => onChangeFeature(e.target.value, i, 'wholesale_price')} placeholder="تایین قیمت عمده فروشی" />
                                     </div>
+                                    {
+                                        feature.wholesale_price && (
+                                            <p className="text-xs text-primary flex items-center mt-1">{formatPriceNumber(feature.wholesale_price)} تومان</p>
+                                        )
+                                    }
                                 </div>
                             </div>
 
@@ -67,6 +73,11 @@ export default function AddFeatures({ title, addLabel, props, onAddFeature, onRe
                                     <div className="h-11">
                                         <input type="text" value={feature.retail_price} onChange={e => onChangeFeature(e.target.value, i, 'retail_price')} placeholder="قیمت محصول در حالت تک فروشی" />
                                     </div>
+                                    {
+                                        feature.retail_price && (
+                                            <p className="text-xs text-primary flex items-center mt-1">{formatPriceNumber(feature.retail_price)} تومان</p>
+                                        )
+                                    }
                                 </div>
                                 <div>
                                     <label htmlFor="">تعداد محصول در این ویژگی</label>
@@ -86,7 +97,7 @@ export default function AddFeatures({ title, addLabel, props, onAddFeature, onRe
                                 <div>
                                     <label htmlFor=""></label>
                                     <div className="flex items-center me-4">
-                                        <input id="red-checkbox" type="checkbox" value={feature.available} onChange={e => onChangeFeature(e.target.value, i, 'available')} className="w-5 h-5 text-primary bg-gray-100 border-gray-300 rounded overflow-hidden" />
+                                        <input id="red-checkbox" type="checkbox" checked={feature.available} value={feature.available} onChange={e => onChangeFeature(e.target.value, i, 'available')} className="w-5 h-5 text-primary bg-gray-100 border-gray-300 rounded overflow-hidden" />
                                         <label htmlFor="red-checkbox" className="ms-2 font-medium text-primary">محصول در این ویژگی موجود است</label>
                                     </div>
                                 </div>
