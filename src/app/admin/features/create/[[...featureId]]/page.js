@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 
 const featuresReducer = (state, { type, payload }) => {
     switch (type) {
+        case 'SET_FEATURES':
+            return payload;
         case 'RESET_FEATURES':
             return [];
         case 'ADD_FEATURE_TITLE':
@@ -37,7 +39,7 @@ const featuresReducer = (state, { type, payload }) => {
     }
 };
 
-export default function CreateFeatures() {
+export default function CreateFeatures({params: {featureId}}) {
 
     const [loading, setLoading] = useState(false)
     const [steps, setSteps] = useState([
@@ -60,9 +62,24 @@ export default function CreateFeatures() {
     const [features, dispatch] = useReducer(featuresReducer, []);
 
     useEffect(() => {
+        if(featureId) {
+            fetchFeature()
+        }
         fetchProducts()
     }, [])
 
+    const fetchFeature = () => {
+        setLoading(true)
+
+        fetch(`/api/admin/features/${featureId}`)
+            .then(res => res.json())
+            .then(data => {
+                dispatch({ type: 'SET_FEATURES', payload: data.features });
+                setSelectedProduct(data.product)
+            })
+            .finally(() => setLoading(false))
+    }
+    
     const fetchProducts = () => {
         setLoading(true)
 
@@ -80,8 +97,8 @@ export default function CreateFeatures() {
             data.product = selectedProduct._id
             data.features = features
 
-            const res = await fetch("/api/admin/features", {
-                method: "POST",
+            const res = await fetch("/api/admin/features"+(featureId && `/${featureId}`), {
+                method: featureId ? "PUT" : "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             })
@@ -97,7 +114,7 @@ export default function CreateFeatures() {
         await toast.promise(
             createFeaturesPromise,
             {
-                loading: 'در حال ایجاد ویژگی ها ...',
+                loading: featureId ? "در حال ویرایش ویژگی ها" : 'در حال ایجاد ویژگی ها ...',
                 success: ({ message }) => message,
                 error: ({ error }) => error,
             }
@@ -138,7 +155,7 @@ export default function CreateFeatures() {
                             <div className="grid grid-cols-2 gap-2 overflow-y-auto">
                                 {
                                     products?.length > 0 && products.map(item => (
-                                        <div key={item._id} onClick={() => { setSelectedProduct(item); setActiveStep(2) }} className="grid grid-cols-3 items-center px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">
+                                        <div key={item._id} onClick={() => { if(!featureId) {setSelectedProduct(item); setActiveStep(2)} }} className={`grid grid-cols-3 items-center px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300 ${item._id === selectedProduct?._id && 'border border-primary'} ${featureId && 'text-gray-400 cursor-not-allowed hover:!bg-gray-200'}`}>
                                             <Image src={item.images[0]} alt="item image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
                                             <h3 className="col-span-2">{item.name}</h3>
                                         </div>
@@ -188,7 +205,9 @@ export default function CreateFeatures() {
 
                 </div>
 
-                <button disabled={!features?.length} onClick={handleSubmitFeatures} className="w-full" type="button">ثبت ویژگی ها</button>
+                <button disabled={!features?.length} onClick={handleSubmitFeatures} className="w-full" type="button">
+                    {featureId ? "ویرایش ویژگی ها" : "ثبت ویژگی ها"}
+                </button>
             </div>
         </section>
     )

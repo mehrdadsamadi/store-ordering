@@ -4,6 +4,7 @@ import { useState } from "react";
 import TrashIcon from "@/components/icons/TrashIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
+import ConfirmBtn from "@/components/common/ConfirmBtn";
 
 export default function AddSpecifications({ title, addLabel, props, onAddSubtitle, onRemoveSubtitle, onChangeSubtitle, onRemoveSpec }) {
 
@@ -22,9 +23,10 @@ export default function AddSpecifications({ title, addLabel, props, onAddSubtitl
                         <span>({props?.length || 0})</span>
                     </h3>
                 </button>
-                <button type="button" onClick={onRemoveSpec} className="border-none hover:bg-gray-300">
+
+                <ConfirmBtn onConfirm={onRemoveSpec} className="border-none hover:bg-gray-300">
                     <TrashIcon />
-                </button>
+                </ConfirmBtn>
             </div>
             <div className={`${isOpen ? 'block' : 'hidden'} border-t border-t-gray-300 pt-2 mt-2`}>
                 {
@@ -45,9 +47,9 @@ export default function AddSpecifications({ title, addLabel, props, onAddSubtitl
                             </div>
                             <div className="">
                                 <label></label>
-                                <button type="button" onClick={() => onRemoveSubtitle(i)} className="border-none hover:bg-gray-300">
+                                <ConfirmBtn onConfirm={() => onRemoveSubtitle(i)} className="border-none hover:bg-gray-300">
                                     <TrashIcon />
-                                </button>
+                                </ConfirmBtn>
                             </div>
                         </div>
                     ))

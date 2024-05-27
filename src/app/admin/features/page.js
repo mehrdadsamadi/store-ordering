@@ -1,12 +1,14 @@
 "use client"
 
 import Badge from "@/components/common/Badge";
+import ConfirmBtn from "@/components/common/ConfirmBtn";
 import Loading from "@/components/common/Loading";
 import Table from "@/components/common/Table";
 import EditIcon from "@/components/icons/EditIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Features() {
     
@@ -41,12 +43,12 @@ export default function Features() {
             id: 'actions',
             cell: ({ row: { original } }) => (
                 <div className="flex gap-2">
-                    <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
+                    <Link href={`/admin/features/create/${original._id}`} className="button rounded-full !p-2 hover:bg-gray-200">
                         <EditIcon />
-                    </button>
-                    <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
+                    </Link>
+                    <ConfirmBtn onConfirm={() => handleRemoveFeature(original._id)} className="rounded-full !p-2 hover:bg-gray-200">
                         <TrashIcon />
-                    </button>
+                    </ConfirmBtn>
                 </div>
             ),
         },
@@ -55,6 +57,30 @@ export default function Features() {
     useEffect(() => {
         fetchFeatures()
     }, [])
+
+    const handleRemoveFeature = async (featureId) => {
+        const removeFeaturePromise = new Promise(async (resolve, reject) => {
+            const res = await fetch("/api/admin/features", {
+                method: "DELETE",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ _id: featureId }),
+            })
+
+            fetchFeatures()
+
+            const body = await res.json()
+            res.ok ? resolve(body) : reject(body)
+        })
+
+        await toast.promise(
+            removeFeaturePromise,
+            {
+                loading: 'در حال حذف ویژگی ...',
+                success: ({ message }) => message,
+                error: ({ error }) => error,
+            }
+        )
+    }
 
     const fetchFeatures = () => {
         setLoading(true)
@@ -70,10 +96,10 @@ export default function Features() {
             <div className="w-full p-4 rounded-lg bg-white flex justify-between">
                 <Link href={"/admin/features/create"} className="button submit">ایجاد ویژگی</Link>
 
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                     <input type="text" className="!mb-0" placeholder="جستجو ویژگی" />
                     <button>جستجو</button>
-                </div>
+                </div> */}
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
                 <Loading loading={loading} />

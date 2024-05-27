@@ -1,6 +1,7 @@
 "use client"
 
 import Badge from "@/components/common/Badge";
+import ConfirmBtn from "@/components/common/ConfirmBtn";
 import Loading from "@/components/common/Loading";
 import Table from "@/components/common/Table";
 import EditIcon from "@/components/icons/EditIcon";
@@ -9,7 +10,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Specifications() {
-    
+
     const [loading, setLoading] = useState(true)
     const [specs, setSpecs] = useState([])
     const [columns, setColumns] = useState([
@@ -90,14 +91,14 @@ export default function Specifications() {
             <div className="w-full p-4 rounded-lg bg-white flex justify-between">
                 <Link href={"/admin/specifications/create"} className="button submit">ایجاد مشخصات</Link>
 
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                     <input type="text" className="!mb-0" placeholder="جستجو مشخصات" />
                     <button>جستجو</button>
-                </div>
+                </div> */}
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
                 <Loading loading={loading} />
-                <Table data={specs} columns={columns}/>
+                <Table data={specs} columns={columns} />
             </div>
         </section>
     )

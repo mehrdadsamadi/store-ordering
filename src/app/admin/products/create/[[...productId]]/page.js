@@ -6,7 +6,7 @@ import Loading from "@/components/common/Loading";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function CreateProduct() {
+export default function CreateProduct({params: {productId}}) {
 
     const [images, setImages] = useState([])
     const [name, setName] = useState("")
@@ -22,9 +22,29 @@ export default function CreateProduct() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        if(productId) {
+            fetchProduct()
+        }
         fetchBrands()
         fetchCategories()
-    }, [])
+    }, [productId])
+
+    const fetchProduct = () => {
+        setLoading(true)
+
+        fetch(`/api/admin/products/${productId}`)
+            .then(res => res.json())
+            .then(data => {
+                setBrand(data.brand._id)
+                setCategory(data.category._id)
+                setImages(data.images)
+                setDescription(data.description)
+                setName(data.name)
+                setSlug(data.slug)
+                setVisible(data.visible)
+            })
+            .finally(() => setLoading(false))
+    }
 
     const fetchBrands = () => {
         setLoading(true)
@@ -54,8 +74,8 @@ export default function CreateProduct() {
         const createProductPromise = new Promise(async (resolve, reject) => {
             const data = { name, images, brand, category, slug, visible, description }
 
-            const res = await fetch("/api/admin/products", {
-                method: "POST",
+            const res = await fetch("/api/admin/products"+ (productId && `/${productId}`), {
+                method: productId ? "PUT" : "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             })
@@ -69,7 +89,7 @@ export default function CreateProduct() {
         await toast.promise(
             createProductPromise,
             {
-                loading: 'در حال ایجاد محصول ...',
+                loading: productId ? "در حال ویرایش محصول..." : 'در حال ایجاد محصول ...',
                 success: ({ message }) => message,
                 error: ({ error }) => error,
             }
@@ -83,6 +103,7 @@ export default function CreateProduct() {
         setCategory("")
         setSlug("")
         setDescription('<h1>در این قسمت میتوانید به صورت کامل توضیحات همراه با تصاویر برای محصول قرار دهید.</h1>')
+        setVisible(true)
     }
 
     const setImagesByPush = (imgPath, imgIndex) => {
@@ -176,7 +197,9 @@ export default function CreateProduct() {
                         </div>
                     </div>
                 </form>
-                <button disabled={(images?.length === 0 || !brand || !category || !slug)} onClick={handleCreateProduct} className="w-full" type="button">ایجاد محصول</button>
+                <button disabled={(images?.length === 0 || !brand || !category || !slug)} onClick={handleCreateProduct} className="w-full" type="button">
+                    {productId ? "ویرایش محصول" : "ایجاد محصول"}
+                </button>
             </div>
         </section>
     )

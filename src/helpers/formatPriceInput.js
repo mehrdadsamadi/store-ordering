@@ -1,3 +1,3 @@
 export function formatPriceNumber(value) {
-  return value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return String(value).replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

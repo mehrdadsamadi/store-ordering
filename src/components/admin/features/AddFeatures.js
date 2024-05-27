@@ -6,6 +6,7 @@ import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import EditableImage from "@/components/common/EditableImage";
 import { formatPriceNumber } from "@/helpers/formatPriceInput";
+import ConfirmBtn from "@/components/common/ConfirmBtn";
 
 export default function AddFeatures({ title, addLabel, props, onAddFeature, onRemoveFeatureItem, onChangeFeature, onRemoveFeature }) {
 
@@ -24,15 +25,16 @@ export default function AddFeatures({ title, addLabel, props, onAddFeature, onRe
                         <span>({props?.length || 0})</span>
                     </h3>
                 </button>
-                <button type="button" onClick={onRemoveFeature} className="border-none hover:bg-gray-300">
+                
+                <ConfirmBtn onConfirm={onRemoveFeature} className="border-none hover:bg-gray-300">
                     <TrashIcon />
-                </button>
+                </ConfirmBtn>
             </div>
             <div className={`${isOpen ? 'block' : 'hidden'} border-t border-t-gray-300 pt-2 mt-2`}>
                 {
                     props?.length > 0 &&
                     props.map((feature, i) => (
-                        <div key={i} className="flex flex-col gap-4 ">
+                        <div key={i} className="flex flex-col gap-4 mb-4">
                             <div className="grid grid-cols-2 gap-2">
                                 <div>
                                     <label>نام</label>
@@ -103,9 +105,9 @@ export default function AddFeatures({ title, addLabel, props, onAddFeature, onRe
                                 </div>
                             </div>
 
-                            <button type="button" onClick={() => onRemoveFeatureItem(i)} className="hover:bg-gray-300 w-full">
+                            <ConfirmBtn onConfirm={() => onRemoveFeatureItem(i)} className="hover:bg-gray-300 w-full">
                                 <TrashIcon />
-                            </button>
+                            </ConfirmBtn>
                         </div>
                     ))
                 }

@@ -5,7 +5,6 @@ import Loading from "@/components/common/Loading";
 import Table from "@/components/common/Table";
 import EditIcon from "@/components/icons/EditIcon";
 import EyeIcon from "@/components/icons/EyeIcon";
-import TrashIcon from "@/components/icons/TrashIcon";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -69,15 +68,12 @@ export default function Products() {
             id: 'actions',
             cell: ({ row: { original } }) => (
                 <div className="flex gap-2">
-                    <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
+                    <Link href={`/admin/products/create/${original._id}`} className="button rounded-full !p-2 hover:bg-gray-200">
                         <EditIcon />
-                    </button>
+                    </Link>
                     <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
                         <EyeIcon />
                     </button>
-                    {/* <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
-                        <TrashIcon />
-                    </button> */}
                 </div>
             ),
         },
@@ -101,10 +97,10 @@ export default function Products() {
             <div className="w-full p-4 rounded-lg bg-white flex justify-between">
                 <Link href={"/admin/products/create"} className="button submit">ایجاد محصول</Link>
 
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                     <input type="text" className="!mb-0" placeholder="جستجو محصول" />
                     <button>جستجو</button>
-                </div>
+                </div> */}
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
                 <Loading loading={loading} />

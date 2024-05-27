@@ -160,7 +160,7 @@ export default function CreateSpecifications() {
                             <div className="grid grid-cols-2 gap-2 overflow-y-auto">
                                 {
                                     sectionItems?.length > 0 && sectionItems.map(item => (
-                                        <div key={item._id} onClick={() => { setSelectedItem(item); setActiveStep(3) }} className="grid grid-cols-3 items-center px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">
+                                        <div key={item._id} onClick={() => { setSelectedItem(item); setActiveStep(3) }} className={`grid grid-cols-3 items-center px-4 py-2 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300 ${item._id === selectedItem?._id && 'border border-primary'}`}>
                                             <Image src={item?.image || item?.images?.[0] || "/placeholders/img-placeholder.webp"} alt="item image" className="rounded-full w-[60px] h-[60px]" width={60} height={60} />
                                             <h3 className="col-span-2">{item.name}</h3>
                                         </div>
