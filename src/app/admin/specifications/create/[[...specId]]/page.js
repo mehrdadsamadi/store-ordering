@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 
 const specificationsReducer = (state, { type, payload }) => {
     switch (type) {
+        case 'SET_SPECS':
+            return payload;
         case 'RESET_SPECS':
             return [];
         case 'ADD_SPEC_TITLE':
@@ -37,7 +39,7 @@ const specificationsReducer = (state, { type, payload }) => {
     }
 };
 
-export default function CreateSpecifications() {
+export default function CreateSpecifications({ params: { specId } }) {
 
     const [loading, setLoading] = useState(false)
     const [steps, setSteps] = useState([
@@ -66,11 +68,39 @@ export default function CreateSpecifications() {
     const [specifications, dispatch] = useReducer(specificationsReducer, []);
 
     useEffect(() => {
+        if(specId) {
+            fetchSpec()
+        }
+    }, [specId])
+
+    useEffect(() => {
         if (selectedSection !== '') {
             setActiveStep(2)
             fetchSectionItems()
         }
     }, [selectedSection])
+
+    const fetchSpec = () => {
+        setLoading(true)
+
+        fetch(`/api/admin/specifications/${specId}`)
+            .then(res => res.json())
+            .then(data => {
+                dispatch({ type: 'SET_SPECS', payload: data.specifications });
+
+                if(selectedSection === '') {
+                    if(data?.product) {
+                        setSelectedSection({ dataName: 'product', fetchName: 'products' })
+                    } else if(data?.category) {
+                        setSelectedSection({ dataName: 'category', fetchName: 'categories' })
+                    } else {
+                        setSelectedSection({ dataName: 'brand', fetchName: 'brands' })                    
+                    }
+                }
+                setSelectedItem(data[selectedSection.dataName])
+            })
+            .finally(() => setLoading(false))
+    }
 
     const fetchSectionItems = () => {
         setLoading(true)
@@ -88,13 +118,13 @@ export default function CreateSpecifications() {
 
             data[selectedSection?.dataName] = selectedItem._id
             data.specifications = specifications
-            
-            const res = await fetch("/api/admin/specifications", {
-                method: "POST",
+
+            const res = await fetch("/api/admin/specifications"+(specId && `/${specId}`), {
+                method: specId ? "PUT" : "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             })
-            
+
             setActiveStep(1)
             setSelectedSection('')
             setSelectedItem()
@@ -108,7 +138,7 @@ export default function CreateSpecifications() {
         await toast.promise(
             createSpecsPromise,
             {
-                loading: 'در حال ایجاد مشخصات ...',
+                loading: specId ? "در حال ویرایش مشخصات..." : 'در حال ایجاد مشخصات ...',
                 success: ({ message }) => message,
                 error: ({ error }) => error,
             }
@@ -144,9 +174,9 @@ export default function CreateSpecifications() {
 
                     <div className="grid grid-cols-3 gap-4 mt-4 h-full">
                         <div className="flex flex-col items-center gap-4">
-                            <div onClick={() => setSelectedSection({dataName:'product', fetchName: 'products'})} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">محصول</div>
-                            <div onClick={() => setSelectedSection({dataName:'category', fetchName: 'categories'})} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">دسته بندی</div>
-                            <div onClick={() => setSelectedSection({dataName:'brand', fetchName: 'brands'})} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">برند</div>
+                            <div onClick={() => setSelectedSection({ dataName: 'product', fetchName: 'products' })} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">محصول</div>
+                            <div onClick={() => setSelectedSection({ dataName: 'category', fetchName: 'categories' })} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">دسته بندی</div>
+                            <div onClick={() => setSelectedSection({ dataName: 'brand', fetchName: 'brands' })} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">برند</div>
                         </div>
                         <div className="relative overflow-y-auto">
                             <Loading loading={loading} />
@@ -170,15 +200,15 @@ export default function CreateSpecifications() {
                         </div>
                         <div className="relative overflow-y-auto">
                             {
-                                !selectedItem ? (
+                                (!selectedItem && !specId) ? (
                                     <Alert text="ابتدا یک نمونه را انتخاب کنید" />
                                 ) : (
                                     <div className="h-full">
                                         <div className="w-full text-center font-semibold mb-2">
                                             <p>
                                                 ایجاد مشخصات برای
-                                                {selectedSection === "prodcuts" ? " محصول " : selectedSection === "brands" ? " برند " : " دسته بندی "}
-                                                {selectedItem.name}
+                                                {(selectedSection.fetchName === "products") ? " محصول " : (selectedSection.fetchName === "brands") ? " برند " : " دسته بندی "}
+                                                {selectedItem?.name}
                                             </p>
                                         </div>
                                         <div className="flex gap-2 mb-2">
@@ -202,7 +232,9 @@ export default function CreateSpecifications() {
 
                 </div>
 
-                <button disabled={!specifications?.length} onClick={handleSubmitSpecs} className="w-full" type="button">ثبت مشخصات</button>
+                <button disabled={!specifications?.length} onClick={handleSubmitSpecs} className="w-full" type="button">
+                    {specId ? "ویرایش مشخصات" : "ثبت مشخصات"}
+                </button>
             </div>
         </section>
     )

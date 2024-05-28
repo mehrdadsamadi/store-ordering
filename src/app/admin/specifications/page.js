@@ -8,6 +8,7 @@ import EditIcon from "@/components/icons/EditIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Specifications() {
 
@@ -62,12 +63,12 @@ export default function Specifications() {
             id: 'actions',
             cell: ({ row: { original } }) => (
                 <div className="flex gap-2">
-                    <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
+                    <Link href={`/admin/specifications/create/${original._id}`} className="button rounded-full !p-2 hover:bg-gray-200">
                         <EditIcon />
-                    </button>
-                    <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
+                    </Link>
+                    <ConfirmBtn onConfirm={() => handleRemoveSpec(original._id)} className="rounded-full !p-2 hover:bg-gray-200">
                         <TrashIcon />
-                    </button>
+                    </ConfirmBtn>
                 </div>
             ),
         },
@@ -76,6 +77,30 @@ export default function Specifications() {
     useEffect(() => {
         fetchSpecs()
     }, [])
+
+    const handleRemoveSpec = async (specId) => {
+        const removeSpecPromise = new Promise(async (resolve, reject) => {
+            const res = await fetch("/api/admin/specifications", {
+                method: "DELETE",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ _id: specId }),
+            })
+
+            fetchSpecs()
+
+            const body = await res.json()
+            res.ok ? resolve(body) : reject(body)
+        })
+
+        await toast.promise(
+            removeSpecPromise,
+            {
+                loading: 'در حال حذف مشخصه ...',
+                success: ({ message }) => message,
+                error: ({ error }) => error,
+            }
+        )
+    }
 
     const fetchSpecs = () => {
         setLoading(true)

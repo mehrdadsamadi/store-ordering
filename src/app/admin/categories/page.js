@@ -5,7 +5,7 @@ import EditableImage from "@/components/common/EditableImage"
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon"
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import Loading from "@/components/common/Loading"
 import Dialog from "@/components/common/Dialog"
@@ -13,6 +13,7 @@ import Alert from "@/components/common/Alert"
 import * as Yup from "yup"
 import { useValidateFormSchema } from "@/hooks/useValidateFormSchema"
 import InputErrorMessage from "@/components/common/InputErrorMessage"
+import { debounce } from "@/helpers/debounce"
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('نام دسته بندی را وارد کنید'),
@@ -30,6 +31,7 @@ export default function Categories() {
     const [categoryName, setCategoryName] = useState('')
     const [categoryParentsId, setCategoryParentsId] = useState([])
     const [currentClickedCategoryData, setCurrentClickedCategoryData] = useState(null)
+    const [search, setSearch] = useState('')
 
     useEffect(() => {
         setLoading(true)
@@ -85,6 +87,24 @@ export default function Categories() {
         setCategoryParentsId(prev => categoryParentsId.filter(c => c._id !== prev.pop()))
     }
 
+    const handleSearch = (searchValue) => {
+        if (searchValue === '') {
+            setCategories(fixCategories.filter(c => c.parent === undefined))
+        } else {
+            setCategories(fixCategories.filter(fc => fc.name.includes(searchValue)))
+        }
+    }
+
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value);
+        debouncedSearch(e.target.value); // مقدار searchValue به تابع debounced ارسال می‌شود
+    };
+
+    const debouncedSearch = useCallback(
+        debounce((value) => handleSearch(value), 500),
+        [fixCategories]
+    );
+
     const handleCreateCategory = async () => {
         const data = { name: categoryName, image: categoryImage, parent: currentClickedCategoryData?._id }
 
@@ -124,8 +144,8 @@ export default function Categories() {
                 <button className="submit" onClick={handleShowDialog}>ایجاد دسته بندی</button>
 
                 <div className="flex items-center gap-2">
-                    <input type="text" className="!mb-0" placeholder="جستجو دسته بندی" />
-                    <button>جستجو</button>
+                    <input type="text" value={search} onChange={handleSearchChange} className="!mb-0" placeholder="جستجو دسته بندی" />
+                    {/* <button>جستجو</button> */}
                 </div>
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">

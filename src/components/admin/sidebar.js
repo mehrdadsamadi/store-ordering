@@ -22,16 +22,16 @@ export default function Sidebar() {
 
     useEffect(() => {
         getClientSession()
-        .then(res => res.json())
-        .then(data => {setUser(data); setAvatar(data.avatar)})
+            .then(res => res.json())
+            .then(data => { setUser(data); setAvatar(data.avatar) })
     }, [])
 
     useEffect(() => {
-        if(avatar !== "/placeholders/user-placeholder.jpg" && avatar !== user?.avatar) {
+        if (avatar !== "/placeholders/user-placeholder.jpg" && avatar !== user?.avatar) {
             updateAvatar()
         }
     }, [avatar])
-    
+
     const updateAvatar = async () => {
         const updateAvatarPromise = new Promise(async (resolve, reject) => {
 
@@ -57,7 +57,7 @@ export default function Sidebar() {
 
     return (
         <aside className="sidebar h-full w-72">
-            <div className="h-full bg-primary text-white rounded-2xl py-8 px-4 flex flex-col gap-3 overflow-y-auto">
+            <div className="h-full bg-primary text-white rounded-2xl py-8 flex flex-col gap-3 overflow-y-auto">
                 <div className="flex flex-col items-center border-b pb-4">
                     <div className="w-[150px] h-[150px] mb-4">
                         <EditableImage link={avatar} setLink={setAvatar} folder="users" hiddenUploadText />
@@ -71,34 +71,37 @@ export default function Sidebar() {
                         )
                     }
                 </div>
-                <Link href={"/admin"} className={`${path === '/admin' && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
-                    <HomeIcon />
-                    <h3 className="col-span-2">خانه</h3>
-                </Link>
-                <Link href={"/admin/categories"} className={`${path.includes('categories') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
-                    <TagIcon />
-                    <h3 className="col-span-2">دسته بندی ها</h3>
-                </Link>
-                <Link href={"/admin/brands"} className={`${path.includes('brands') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
-                    <BrandIcon />
-                    <h3 className="col-span-2">برند ها</h3>
-                </Link>
-                <Link href={"/admin/products"} className={`${path.includes('products') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
-                    <CubeIcon />
-                    <h3 className="col-span-2">محصول ها</h3>
-                </Link>
-                <Link href={"/admin/specifications"} className={`${path.includes('specifications') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
-                    <ListIcon />
-                    <h3 className="col-span-2">مشخصات</h3>
-                </Link>
-                <Link href={"/admin/features"} className={`${path.includes('features') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
-                    <SwatchIcon />
-                    <h3 className="col-span-2">ویژگی ها</h3>
-                </Link>
-                <Link href={"/admin/users"} className={`${path.includes('users') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-gray-50 hover:text-gray-800 rounded-lg`}>
-                    <UsersIcon />
-                    <h3 className="col-span-2">کاربر ها</h3>
-                </Link>
+                <div className="pr-4 flex flex-col gap-3">
+
+                    <Link href={"/admin"} className={`${path === '/admin' && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
+                        <HomeIcon />
+                        <h3 className="col-span-2">خانه</h3>
+                    </Link>
+                    <Link href={"/admin/categories"} className={`${path.includes('categories') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
+                        <TagIcon />
+                        <h3 className="col-span-2">دسته بندی ها</h3>
+                    </Link>
+                    <Link href={"/admin/brands"} className={`${path.includes('brands') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
+                        <BrandIcon />
+                        <h3 className="col-span-2">برند ها</h3>
+                    </Link>
+                    <Link href={"/admin/products"} className={`${path.includes('products') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
+                        <CubeIcon />
+                        <h3 className="col-span-2">محصول ها</h3>
+                    </Link>
+                    <Link href={"/admin/specifications"} className={`${path.includes('specifications') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
+                        <ListIcon />
+                        <h3 className="col-span-2">مشخصات</h3>
+                    </Link>
+                    <Link href={"/admin/features"} className={`${path.includes('features') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
+                        <SwatchIcon />
+                        <h3 className="col-span-2">ویژگی ها</h3>
+                    </Link>
+                    <Link href={"/admin/users"} className={`${path.includes('users') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
+                        <UsersIcon />
+                        <h3 className="col-span-2">کاربر ها</h3>
+                    </Link>
+                </div>
             </div>
         </aside>
     )

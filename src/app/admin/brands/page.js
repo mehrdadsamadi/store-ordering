@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import Dialog from "@/components/common/Dialog"
 import EditableImage from "@/components/common/EditableImage"
 import Loading from "@/components/common/Loading"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Image from "next/image"
 import toast from "react-hot-toast"
 import TrashIcon from "@/components/icons/TrashIcon"
@@ -12,6 +12,7 @@ import Alert from "@/components/common/Alert"
 import * as Yup from "yup"
 import { useValidateFormSchema } from "@/hooks/useValidateFormSchema"
 import InputErrorMessage from "@/components/common/InputErrorMessage"
+import { debounce } from "@/helpers/debounce"
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('نام برند را وارد کنید'),
@@ -24,8 +25,10 @@ export default function Brands() {
     const [showDialog, setShowDialog] = useState(false)
     const [loading, setLoading] = useState(true)
     const [brands, setBrands] = useState([])
+    const [searchedBrands, setSearchedBrands] = useState([])
     const [brandImage, setBrandImage] = useState('')
     const [brandName, setBrandName] = useState('')
+    const [search, setSearch] = useState('')
 
     useEffect(() => {
         fetchBrands()
@@ -36,7 +39,10 @@ export default function Brands() {
 
         fetch("/api/admin/brands")
             .then(res => res.json())
-            .then(data => setBrands(data))
+            .then(data => {
+                setBrands(data)
+                setSearchedBrands(data)
+            })
             .finally(() => setLoading(false))
     }
 
@@ -51,6 +57,24 @@ export default function Brands() {
         setBrandName('')
         setShowDialog(false)
     }
+
+    const handleSearch = (searchValue) => {
+        if (searchValue === '') {
+            setBrands(searchedBrands)
+        } else {
+            setBrands(searchedBrands.filter(sb => sb.name.includes(searchValue)))
+        }
+    }
+
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value);
+        debouncedSearch(e.target.value); // مقدار searchValue به تابع debounced ارسال می‌شود
+    };
+
+    const debouncedSearch = useCallback(
+        debounce((value) => handleSearch(value), 500),
+        [searchedBrands]
+    );
 
     const handleRemoveBrand = async (brandId) => {
         const removeBrandPromise = new Promise(async (resolve, reject) => {
@@ -113,8 +137,8 @@ export default function Brands() {
                 <button className="submit" onClick={handleShowDialog}>ایجاد برند</button>
 
                 <div className="flex items-center gap-2">
-                    <input type="text" className="!mb-0" placeholder="جستجو برند" />
-                    <button>جستجو</button>
+                    <input type="text" value={search} onChange={handleSearchChange} className="!mb-0" placeholder="جستجو برند" />
+                    {/* <button onClick={handleSearch}>جستجو</button> */}
                 </div>
             </div>
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
@@ -155,7 +179,7 @@ export default function Brands() {
                             <div className="h-11">
                                 <input type="text" value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="نام برند" />
                             </div>
-                            <InputErrorMessage message={errors?.name}/>
+                            <InputErrorMessage message={errors?.name} />
                         </div>
                     </div>
                 </Dialog>
