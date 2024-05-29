@@ -8,6 +8,8 @@ export default function Home() {
   return (
     <>
       <Link href={"/admin"} className="button">ادمین</Link>
+      <Link href={"/login"} className="button">ورود</Link>
+      <Link href={"/user"} className="button">فروشگاه دار</Link>
       <ConfirmBtn onConfirm={logout} confirmBtnText="خروج" title="برای خروج مطمعن هستید؟">خروج</ConfirmBtn>
     </>
   );

@@ -56,7 +56,7 @@ export default function Sidebar() {
     }
 
     return (
-        <aside className="sidebar h-full w-72">
+        <aside className="admin-sidebar h-full w-72">
             <div className="h-full bg-primary text-white rounded-2xl py-8 flex flex-col gap-3 overflow-y-auto">
                 <div className="flex flex-col items-center border-b pb-4">
                     <div className="w-[150px] h-[150px] mb-4">

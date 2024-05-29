@@ -10,8 +10,12 @@ body {
     min-height: 100vh;
 }
 
-a.active {
+.admin-sidebar a.active {
     @apply bg-white text-gray-950
+}
+
+.user-sidebar a.active {
+    @apply bg-gray-50/20
 }
 
 td:first-child, th:first-child {
