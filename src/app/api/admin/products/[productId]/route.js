@@ -12,7 +12,7 @@ export async function GET(_, { params: { productId } }) {
     try {
         await connectMongo()
 
-        return NextResponse.json(await Product.findById(productId).populate(["category", "brand", "specs"]))
+        return NextResponse.json(await Product.findById(productId).populate(["category", "brand", "specs", "features"]))
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: error.message }, { status: 500 })
