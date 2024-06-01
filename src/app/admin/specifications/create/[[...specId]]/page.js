@@ -68,7 +68,7 @@ export default function CreateSpecifications({ params: { specId } }) {
     const [specifications, dispatch] = useReducer(specificationsReducer, []);
 
     useEffect(() => {
-        if(specId) {
+        if (specId) {
             fetchSpec()
         }
     }, [specId])
@@ -88,16 +88,18 @@ export default function CreateSpecifications({ params: { specId } }) {
             .then(data => {
                 dispatch({ type: 'SET_SPECS', payload: data.specifications });
 
-                if(selectedSection === '') {
-                    if(data?.product) {
+                if (selectedSection === '') {
+                    if (data?.product) {
                         setSelectedSection({ dataName: 'product', fetchName: 'products' })
-                    } else if(data?.category) {
+                        setSelectedItem(data.product)
+                    } else if (data?.category) {
                         setSelectedSection({ dataName: 'category', fetchName: 'categories' })
+                        setSelectedItem(data.category)
                     } else {
-                        setSelectedSection({ dataName: 'brand', fetchName: 'brands' })                    
+                        setSelectedSection({ dataName: 'brand', fetchName: 'brands' })
+                        setSelectedItem(data.brand)
                     }
                 }
-                setSelectedItem(data[selectedSection.dataName])
             })
             .finally(() => setLoading(false))
     }
@@ -119,7 +121,7 @@ export default function CreateSpecifications({ params: { specId } }) {
             data[selectedSection?.dataName] = selectedItem._id
             data.specifications = specifications
 
-            const res = await fetch("/api/admin/specifications"+(specId && `/${specId}`), {
+            const res = await fetch("/api/admin/specifications" + (specId ? `/${specId}` : ''), {
                 method: specId ? "PUT" : "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -171,7 +173,7 @@ export default function CreateSpecifications({ params: { specId } }) {
             <div className="w-full p-4 rounded-lg bg-white h-full relative flex flex-col justify-between">
                 <div className="p-4 h-full overflow-hidden">
                     <Stepper steps={steps} activeStep={activeStep} />
-
+                    
                     <div className="grid grid-cols-3 gap-4 mt-4 h-full">
                         <div className="flex flex-col items-center gap-4">
                             <div onClick={() => setSelectedSection({ dataName: 'product', fetchName: 'products' })} className="rounded-lg bg-gray-200 text-center w-40 p-4 hover:bg-gray-300 cursor-pointer">محصول</div>

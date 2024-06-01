@@ -1,6 +1,7 @@
 import localFont from "next/font/local"
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import CartProviders from "@/prodviders/client/CartProvider";
 
 const danaFont = localFont({
   src: [
@@ -22,8 +23,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fa-IR" dir="rtl" className={`${danaFont.className} scroll-smooth`}>
       <body className={danaFont.className}>
-        <Toaster position="bottom-center"/>
-        {children}
+        <CartProviders>
+          <Toaster position="bottom-center"/>
+          {children}
+        </CartProviders>
       </body>
     </html>
   );

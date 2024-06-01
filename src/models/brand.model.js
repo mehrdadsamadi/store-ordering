@@ -2,7 +2,7 @@ const { Schema, model, models, Types } = require("mongoose");
 
 const brandSchema = new Schema({
     name: { type: String, required: true },
-    specs: { type: Types.ObjectId, ref: "specification" },
+    specs: { type: Schema.Types.ObjectId, ref: "specification" },
     image: { type: String },
 })
 

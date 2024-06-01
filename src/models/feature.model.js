@@ -17,7 +17,7 @@ const featurBodySchema = new Schema({
 })
 
 const featureSchema = new Schema({
-    product: { type: Types.ObjectId, ref: "product" },
+    product: { type: Schema.Types.ObjectId, ref: "product" },
     features: { type: [featurBodySchema], required: true }
 })
 

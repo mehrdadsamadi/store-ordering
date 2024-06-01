@@ -97,7 +97,7 @@ export default function CreateFeatures({params: {featureId}}) {
             data.product = selectedProduct._id
             data.features = features
 
-            const res = await fetch("/api/admin/features"+(featureId && `/${featureId}`), {
+            const res = await fetch("/api/admin/features"+ (featureId ? `/${featureId}`: ''), {
                 method: featureId ? "PUT" : "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),

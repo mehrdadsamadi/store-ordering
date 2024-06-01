@@ -11,7 +11,7 @@ export default function UserLayout({ children }) {
     return (
         <section className="p-4 flex gap-4 h-screen">
             <Sidebar />
-            <div className="p-4 rounded-2xl w-full border overflow-hidden">
+            <div className="p-4 rounded-2xl w-full border overflow-hidden relative">
                 {children}
             </div>
         </section>

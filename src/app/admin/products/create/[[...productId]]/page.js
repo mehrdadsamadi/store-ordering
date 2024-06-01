@@ -74,7 +74,7 @@ export default function CreateProduct({params: {productId}}) {
         const createProductPromise = new Promise(async (resolve, reject) => {
             const data = { name, images, brand, category, slug, visible, description }
 
-            const res = await fetch("/api/admin/products"+ (productId && `/${productId}`), {
+            const res = await fetch("/api/admin/products"+ (productId ? `/${productId}`: ''), {
                 method: productId ? "PUT" : "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
