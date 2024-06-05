@@ -1,11 +1,32 @@
 import Alert from "@/components/common/Alert";
 import Tooltip from "@/components/common/Tooltip";
+import MinusIcon from "@/components/icons/MinusIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
 import { formatPriceNumber } from "@/helpers/formatPriceInput";
+import { CartContext } from "@/prodviders/client/CartProvider";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 export default function ProductCard({ product: pr }) {
+
+    const { addToCart } = useContext(CartContext)
+
     const [selectedFeature, setSelectedFeature] = useState()
+    const [retail_quantity, setRetail_quantity] = useState(0)
+    const [wholesale_quantity, setWholesale_quantity] = useState(0)
+
+    const handleQuantities = (setState, quantity) => {
+        setState(prev => (prev + quantity) >= 0 ? (prev + quantity) : 0)
+    }
+
+    const handleAddToCart = () => {
+        addToCart(pr, selectedFeature, {retail_quantity, wholesale_quantity})
+
+        setSelectedFeature()
+        setRetail_quantity(0)
+        setWholesale_quantity(0)
+    }
+
     return (
         <div className="flex-shrink-0 mx-auto relative overflow-hidden bg-primary rounded-lg w-full shadow-lg">
             <svg className="absolute bottom-0 left-0 mb-8" viewBox="0 0 375 283" fill="none"
@@ -42,20 +63,52 @@ export default function ProductCard({ product: pr }) {
                         <div className="flex flex-col gap-4">
                             <div>
                                 <p className="mb-1">خرید عمده ({selectedFeature?.wholesale_quantity} عدد)</p>
-                                <button type="button" className="w-full">
-                                    {
-                                        selectedFeature ? `هر عدد ${formatPriceNumber(selectedFeature?.wholesale_price)} تومان` : "یک گزینه را انتخاب کنید"
-                                    }
-                                </button>
+                                <div className="relative flex items-center w-full gap-2 mt-2">
+                                    <button type="button" onClick={() => handleQuantities(setWholesale_quantity, -selectedFeature?.wholesale_quantity)} id="decrement-button" data-input-counter-decrement="bedrooms-input" className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        <MinusIcon />
+                                    </button>
+                                    <div>
+                                        <div className="h-11">
+                                            <input type="text" className="z-10 text-black" value={wholesale_quantity} />
+                                        </div>
+                                        <div className="absolute bottom-0 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex grow items-center text-xs text-gray-400 space-x-1 rtl:space-x-reverse">
+                                            <span>عدد</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" onClick={() => handleQuantities(setWholesale_quantity, selectedFeature?.wholesale_quantity)} id="increment-button" data-input-counter-increment="bedrooms-input" className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        <PlusIcon />
+                                    </button>
+                                </div>
+                                <p className="mt-1 text-center">هر عدد {formatPriceNumber(selectedFeature?.wholesale_price)} تومان</p>
                             </div>
                             <div>
                                 <p className="mb-1">خرید خرده (1 عدد)</p>
-                                <button type="button" className="w-full">
-                                    {
-                                        selectedFeature ? `هر عدد ${formatPriceNumber(selectedFeature?.retail_price)} تومان` : "یک گزینه را انتخاب کنید"
-                                    }
-                                </button>
+                                <div className="relative flex items-center w-full gap-2 mt-2">
+                                    <button type="button" onClick={() => handleQuantities(setRetail_quantity, -1)} id="decrement-button" data-input-counter-decrement="bedrooms-input" className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        <MinusIcon />
+                                    </button>
+                                    <div>
+                                        <div className="h-11">
+                                            <input type="text" className="z-10 text-black" value={retail_quantity} />
+                                        </div>
+                                        <div className="absolute bottom-0 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex grow items-center text-xs text-gray-400 space-x-1 rtl:space-x-reverse">
+                                            <span>عدد</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" onClick={() => handleQuantities(setRetail_quantity, 1)} id="increment-button" data-input-counter-increment="bedrooms-input" className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                                        <PlusIcon />
+                                    </button>
+                                </div>
+                                <p className="mt-1 text-center">هر عدد {formatPriceNumber(selectedFeature?.retail_price)} تومان</p>
                             </div>
+
+                            {
+                                (wholesale_quantity > 0 || retail_quantity > 0) && (
+                                    <div className="w-full">
+                                        <button type="button" onClick={handleAddToCart} className="w-full hover:bg-gray-50/10">افزودن به سبد خرید</button>
+                                    </div>
+                                )
+                            }
                         </div>
                     ) : (
                         <Alert text="یک گزینه را انتخاب کنید" />

@@ -2,6 +2,7 @@
 
 import Tooltip from "@/components/common/Tooltip";
 import HomeIcon from "@/components/icons/HomeIcon";
+import ShoppingCartIcon from "@/components/icons/ShoppingCartIcon";
 import Link from "next/link";
 
 export default function Sidebar() {
@@ -15,21 +16,9 @@ export default function Sidebar() {
                     </Link>
                 </Tooltip>
 
-                <Tooltip text="خانه">
+                <Tooltip text="سبد خرید">
                     <Link href={"/"} className="flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20">
-                        <HomeIcon className="size-7" />
-                    </Link>
-                </Tooltip>
-
-                <Tooltip text="خانه">
-                    <Link href={"/"} className="flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20">
-                        <HomeIcon className="size-7" />
-                    </Link>
-                </Tooltip>
-
-                <Tooltip text="خانه">
-                    <Link href={"/"} className="flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20">
-                        <HomeIcon className="size-7" />
+                        <ShoppingCartIcon className="size-7" />
                     </Link>
                 </Tooltip>
             </div>
