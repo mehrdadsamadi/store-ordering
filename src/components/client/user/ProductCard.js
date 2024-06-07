@@ -79,7 +79,7 @@ export default function ProductCard({ product: pr }) {
                                         <PlusIcon />
                                     </button>
                                 </div>
-                                <p className="mt-1 text-center">هر عدد {formatPriceNumber(selectedFeature?.wholesale_price)} تومان</p>
+                                <p className="mt-1 text-center text-sm">هر عدد {formatPriceNumber(selectedFeature?.wholesale_price)} تومان</p>
                             </div>
                             <div>
                                 <p className="mb-1">خرید خرده (1 عدد)</p>
@@ -99,7 +99,7 @@ export default function ProductCard({ product: pr }) {
                                         <PlusIcon />
                                     </button>
                                 </div>
-                                <p className="mt-1 text-center">هر عدد {formatPriceNumber(selectedFeature?.retail_price)} تومان</p>
+                                <p className="mt-1 text-center text-sm">هر عدد {formatPriceNumber(selectedFeature?.retail_price)} تومان</p>
                             </div>
 
                             {

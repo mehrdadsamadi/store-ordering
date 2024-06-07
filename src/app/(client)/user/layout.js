@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 export default function UserLayout({ children }) {
     const { user } = useGetServerSession()
     if (!user) {
-        return redirect("/")
+        return redirect("/login")
     }
 
     return (
