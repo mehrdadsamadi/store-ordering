@@ -11,7 +11,7 @@ export default function ConfirmBtn({ children, onConfirm, className, title="بر
                         <div className="w-72 bg-white p-4 rounded-lg">
                             <div className="text-center">{title}</div>
                             <div className="grid grid-cols-2 w-full gap-2 mt-4">
-                                <button type="button" onClick={() => { onConfirm(); setShowConfirm(false) }} className="bg-primary w-full text-white border-none">{confirmBtnText}</button>
+                                <button type="button" onClick={() => { onConfirm(); setShowConfirm(false) }} className="submit w-full text-white border-none">{confirmBtnText}</button>
                                 <button type="button" onClick={() => setShowConfirm(false)} className="border-gray-200 w-full hover:border-gray-300">انصراف</button>
                             </div>
                         </div>

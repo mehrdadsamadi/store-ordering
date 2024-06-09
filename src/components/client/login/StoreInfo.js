@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function StoreInfo({ setLoading }) {
+export default function StoreInfo({ setLoading, editingAddress = false, storeInfo }) {
 
     const { push } = useRouter()
 
@@ -18,7 +18,14 @@ export default function StoreInfo({ setLoading }) {
     const [provinceCities, setProvinceCities] = useState([])
 
     useEffect(() => {
+        if (storeInfo) {
+            setStoreName(storeInfo.name)
+            setProvince(storeInfo.province)
+            setCity(storeInfo.city)
+            setAddress(storeInfo.address)
+        }
         getAllProvinces()
+
     }, [])
 
     useEffect(() => {
@@ -32,7 +39,7 @@ export default function StoreInfo({ setLoading }) {
 
         fetch("https://iran-locations-api.ir/api/v1/fa/states")
             .then(res => res.json())
-            .then(data => { setAllProcvinces(data); setProvince(data[0].name) })
+            .then(data => { setAllProcvinces(data); !editingAddress && setProvince(data[0].name) })
             .finally(() => setLoading(false))
     }
 
@@ -41,7 +48,7 @@ export default function StoreInfo({ setLoading }) {
 
         fetch(`https://iran-locations-api.ir/api/v1/fa/cities?state=${province}`)
             .then(res => res.json())
-            .then(data => { setProvinceCities(data.cities); setCity(data.cities[0].name) })
+            .then(data => { setProvinceCities(data[0].cities); !editingAddress && setCity(data[0].cities[0].name) })
             .finally(() => setLoading(false))
     }
 
@@ -57,7 +64,7 @@ export default function StoreInfo({ setLoading }) {
                 const storeInfoPromise = new Promise(async (resolve, reject) => {
 
                     const res = await fetch("/api/users/store-info", {
-                        method: "POST",
+                        method: editingAddress ? "PUT" : "POST",
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ name: storeName, province, city, address, location: storeLoc, phone: user.phone }),
                     })
@@ -75,7 +82,9 @@ export default function StoreInfo({ setLoading }) {
                     }
                 )
                     .then(() => {
-                        return push("/")
+                        if(!editingAddress) {
+                            return push("/")
+                        }
                     })
                     .finally(() => setLoading(false))
             })
@@ -86,7 +95,7 @@ export default function StoreInfo({ setLoading }) {
             <div>
                 <label htmlFor="">موقعیت مکانی فروشگاه</label>
                 <div className="w-full h-[300px] overflow-hidden rounded-md">
-                    <Map setStoreLoc={setStoreLoc} />
+                    <Map setStoreLoc={setStoreLoc} center={editingAddress && [storeInfo.location.lat, storeInfo.location.lng]} />
                 </div>
             </div>
 

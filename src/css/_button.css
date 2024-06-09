@@ -7,7 +7,8 @@ button, .button{
 
 button[type="submit"], .submit {
     @apply border-primary bg-primary text-white;
+    @apply hover:!bg-primary/90
 }
 button[type="submit"]:disabled, .submit:disabled, button[disabled] {
-    @apply cursor-not-allowed bg-gray-300 opacity-50 border-none;
+    @apply cursor-not-allowed bg-gray-300 hover:!bg-gray-300 opacity-50 border-none;
 }
