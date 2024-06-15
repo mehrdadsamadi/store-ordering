@@ -4,11 +4,11 @@ import Map from "@/components/common/Map"
 import EditIcon from "@/components/icons/EditIcon"
 import ExclamationCircleIcon from "@/components/icons/ExclamationCircleIcon"
 import { getClientSession } from "@/helpers/sessions"
-import { useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import StoreInfo from "../../login/StoreInfo"
 import Loading from "@/components/common/Loading"
 
-export default function ChooseShippingTime() {
+export default function ChooseShippingAddress({ setAddress }) {
 
     const [user, setUser] = useState()
     const [storeInfo, setStoreInfo] = useState()
@@ -23,15 +23,32 @@ export default function ChooseShippingTime() {
             .then(async user => {
                 if (user) {
                     setUser(user)
-                    setStoreInfo(await getUserStoreAddress(user))
                 }
-                setLoading(false)
             })
     }, [])
 
+    useEffect(() => {
+        getStoreAddress()
+            .then(address => {
+                setStoreInfo(address)
+                setAddress(address)
+                setLoading(false)
+            })
+    }, [user])
+
+    const getStoreAddress = async () => {
+        return await getUserStoreAddress(user)
+    }
+
     const handleCloseDialog = async () => {
-        console.log("hello");
-        setStoreInfo(await getUserStoreAddress(user))
+        setLoading(true)
+        
+        getStoreAddress()
+            .then(address => {
+                setStoreInfo(address)
+                setAddress(address)
+                setLoading(false)
+            })
         setShowDialog(false)
     }
 

@@ -19,7 +19,7 @@ export default function Map({ setStoreLoc, canMove = true, center = [35.715298, 
         <div className='w-full h-full relative'>
             <MapContainer
                 center={center}
-                zoom={canMove ? 13 : 16}
+                zoom={canMove ? 14 : 16}
                 scrollWheelZoom={canMove}
                 dragging={canMove}
                 zoomControl={canMove}
