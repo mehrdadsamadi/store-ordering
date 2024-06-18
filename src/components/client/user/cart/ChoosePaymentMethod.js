@@ -2,8 +2,6 @@ import { PAYMENT_METHODS } from "@/helpers/paymentMethods"
 
 export default function ChoosePaymentMethod({method, setMethod}) {
 
-    // const [method, setMethod] = useState(PAYMENT_METHODS.INTERNET)
-
     return (
         <section>
             <div className="flex flex-col gap-4">

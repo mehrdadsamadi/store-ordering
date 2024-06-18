@@ -13,10 +13,14 @@ import PlusIcon from "@/components/icons/PlusIcon";
 import { formatPriceNumber } from "@/helpers/formatPriceInput";
 import { ORDER_STATUSES } from "@/helpers/orderStatuses";
 import { PAYMENT_METHODS } from "@/helpers/paymentMethods";
+import { CartContext } from "@/prodviders/client/CartProvider";
 import Image from "next/image";
-import { useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function CartPage() {
+
+    const { clearCart } = useContext(CartContext)
 
     const [loading, setLoading] = useState(false)
     const [cartItems, setCartItems] = useState([])
@@ -55,19 +59,44 @@ export default function CartPage() {
         })
     }
 
-    const handleSidebarClick = () => {
+    const handleSidebarClick = async () => {
         if (step !== 3) {
             setStep(prev => prev + 1)
         } else {
+            setLoading(true)
+
             const order = {
-                address,
+                address: address._id,
                 paymentMethod: method,
-                paymentStatus: true,
-                status: ORDER_STATUSES.PROCESSING,
-                orderItems: cartItems
+                paid: true,
+                status: ORDER_STATUSES.PROCESSING.name,
+                items: cartItems
             }
 
-            console.log(order);
+            const createOrderPromise = new Promise(async (resolve, reject) => {
+
+                const res = await fetch("/api/orders/", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(order),
+                })
+
+                const body = await res.json()
+                res.ok ? resolve(body) : reject(body)
+            })
+
+            await toast.promise(
+                createOrderPromise,
+                {
+                    loading: 'در حال ثبت سفارش',
+                    success: ({ message }) => message,
+                    error: ({ error }) => error,
+                }
+            )
+                .then(() => {
+                    clearCart({hasToast: false})
+                })
+                .finally(() => setLoading(false))
         }
     }
 

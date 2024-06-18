@@ -2,6 +2,7 @@
 
 import Tooltip from "@/components/common/Tooltip";
 import HomeIcon from "@/components/icons/HomeIcon";
+import ShoppingBagIcon from "@/components/icons/ShoppingBagIcon";
 import ShoppingCartIcon from "@/components/icons/ShoppingCartIcon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -23,6 +24,12 @@ export default function Sidebar() {
                 <Tooltip text="سبد خرید">
                     <Link href={"/user/cart"} className={`${path.includes('cart') && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
                         <ShoppingCartIcon className="size-7" />
+                    </Link>
+                </Tooltip>
+
+                <Tooltip text="سفارش ها">
+                    <Link href={"/user/orders"} className={`${path.includes('orders') && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
+                        <ShoppingBagIcon className="size-7" />
                     </Link>
                 </Tooltip>
             </div>

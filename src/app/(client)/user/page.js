@@ -17,7 +17,7 @@ export default function UserPage() {
 
         fetch("/api/products")
             .then(res => res.json())
-            .then(data => { setProducts(data); console.log(data); })
+            .then(data => setProducts(data))
             .finally(() => setLoading(false))
     }
 

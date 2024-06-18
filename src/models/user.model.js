@@ -11,7 +11,7 @@ const userSchema = new Schema({
         code: 0,
         expiresIn: 0
     }},
-    role: { type: String, default: ROLES.USER, enum: [ROLES.USER, ROLES.ADMIN, ROLES.DRIVER, ROLES.STORE_OWNER] }
+    role: { type: String, default: ROLES.USER, enum: (Object.keys(ROLES).map(key => ROLES[key])) }
 })
 
 const User = models?.user || model("user", userSchema)

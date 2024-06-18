@@ -58,9 +58,13 @@ export default function ChooseShippingAddress({ setAddress }) {
             {
                 storeInfo && (
                     <div className="flex gap-4">
-                        <div className="w-[200px] h-[200px] overflow-hidden rounded-md">
-                            <Map center={[storeInfo.location.lat, storeInfo.location.lng]} canMove={false} />
-                        </div>
+                        {
+                            storeInfo && (
+                                <div className="w-[200px] h-[200px] overflow-hidden rounded-md">
+                                    <Map center={[storeInfo.location.lat, storeInfo.location.lng]} canMove={false} />
+                                </div>
+                            )
+                        }
 
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
