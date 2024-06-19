@@ -11,16 +11,19 @@ import MenuDotIcon from "@/components/icons/MenuDotIcon";
 import MinusIcon from "@/components/icons/MinusIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
 import { formatPriceNumber } from "@/helpers/formatPriceInput";
+import { getItemPrice } from "@/helpers/getItemPrice";
 import { ORDER_STATUSES } from "@/helpers/orderStatuses";
 import { PAYMENT_METHODS } from "@/helpers/paymentMethods";
 import { CartContext } from "@/prodviders/client/CartProvider";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useContext, useLayoutEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function CartPage() {
 
-    const { clearCart } = useContext(CartContext)
+    const { push } = useRouter()
+    const { clearCart, removeProductFromCart } = useContext(CartContext)
 
     const [loading, setLoading] = useState(false)
     const [cartItems, setCartItems] = useState([])
@@ -39,15 +42,6 @@ export default function CartPage() {
         setCartItems(JSON.parse(localStorage.getItem('cart')))
 
         setLoading(false)
-    }
-
-    const getItemPrice = (item) => {
-        let price = 0
-
-        price += (item.quantities.retail_quantity * item.feature.retail_price)
-        price += (item.quantities.wholesale_quantity * item.feature.wholesale_price)
-
-        return price
     }
 
     const handleChangeItemQuantity = (item, quantity, field) => {
@@ -70,7 +64,8 @@ export default function CartPage() {
                 paymentMethod: method,
                 paid: true,
                 status: ORDER_STATUSES.PROCESSING.name,
-                items: cartItems
+                items: cartItems,
+                price: cartItems.reduce((acc, cur) => getItemPrice(cur) + acc, 0) + shippingCost
             }
 
             const createOrderPromise = new Promise(async (resolve, reject) => {
@@ -94,7 +89,8 @@ export default function CartPage() {
                 }
             )
                 .then(() => {
-                    clearCart({hasToast: false})
+                    clearCart({ hasToast: false })
+                    return push("/user/orders")
                 })
                 .finally(() => setLoading(false))
         }
@@ -207,7 +203,7 @@ export default function CartPage() {
                                                         </div>
 
                                                         <div className="w-full">
-                                                            <ConfirmBtn className="w-full">
+                                                            <ConfirmBtn className="w-full" onConfirm={() => {removeProductFromCart(item.product._id); getCartItems()}}>
                                                                 حذف از سبد خرید
                                                             </ConfirmBtn>
                                                         </div>

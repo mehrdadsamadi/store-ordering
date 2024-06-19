@@ -12,6 +12,8 @@ const userSchema = new Schema({
         expiresIn: 0
     }},
     role: { type: String, default: ROLES.USER, enum: (Object.keys(ROLES).map(key => ROLES[key])) }
+}, {
+    timestamps: true
 })
 
 const User = models?.user || model("user", userSchema)
