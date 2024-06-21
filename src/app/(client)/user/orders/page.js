@@ -1,6 +1,7 @@
 "use client"
 
 import Alert from "@/components/common/Alert";
+import Badge from "@/components/common/Badge";
 import Loading from "@/components/common/Loading";
 import ProgressBar from "@/components/common/ProgressBar";
 import ArrowUturnRightIcon from "@/components/icons/ArrowUturnRightIcon";
@@ -30,6 +31,7 @@ export default function OrdersPage() {
         fetch("/api/orders")
             .then(res => res.json())
             .then(data => {
+                console.log(data);
                 setOrders(data)
                 setCurrentOrders(data.filter(od => (od.status !== ORDER_STATUSES.DELIVERY.name && od.status !== ORDER_STATUSES.RETURNED.name && od.status !== ORDER_STATUSES.CANCELED.name)))
             })
@@ -100,9 +102,6 @@ export default function OrdersPage() {
                                         currentOrders?.length > 0 ? (
                                             currentOrders.map(co => (
                                                 <div key={co._id} className="border rounded-md p-4 flex gap-4">
-                                                    <div>
-                                                        <Image src={"/placeholders/img-placeholder.webp"} alt="product image" className="size-28 rounded-md" width={112} height={112} />
-                                                    </div>
                                                     <div className="flex flex-col gap-4">
                                                         <div className="w-[200px]">
                                                             <div className="font-medium text-sm text-primary">
@@ -122,13 +121,28 @@ export default function OrdersPage() {
                                                             <p className="mx-2">|</p>
                                                             <p>{Object.keys(PAYMENT_METHODS).map(key => (PAYMENT_METHODS[key].name === co.paymentMethod && PAYMENT_METHODS[key].text))}</p>
                                                             <p className="mx-2">|</p>
-                                                            <p>{co.paid ? "پرداخت شده" : "پرداخت نشده"}</p>
+                                                            {
+                                                                co.paid ?
+                                                                    <Badge className="!bg-green-500">پرداخت شده</Badge>
+                                                                    : <Badge className="bg-red-500">پرداخت نشده</Badge>
+                                                            }
                                                         </div>
+                                                    </div>
+                                                    <div className="border-r pr-2 mr-2 flex gap-2 overflow-x-auto">
+                                                        {
+                                                            co.items.map(item => (
+                                                                item.product.images.map((image, index) => (
+                                                                    <div key={index} className="bg-gray-100 p-2 rounded-lg">
+                                                                        <Image key={index} src={image || "/placeholders/img-placeholder.webp"} alt="product image" className="size-28 rounded-md" width={112} height={112} />
+                                                                    </div>
+                                                                ))
+                                                            ))
+                                                        }
                                                     </div>
                                                 </div>
                                             ))
-                                        )  : (
-                                            <Alert text="سفارش جاری ندارید"/>
+                                        ) : (
+                                            <Alert text="سفارش جاری ندارید" />
                                         )
                                     }
                                 </div>

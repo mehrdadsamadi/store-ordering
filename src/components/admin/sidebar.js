@@ -12,6 +12,7 @@ import UsersIcon from "../icons/UsersIcon";
 import ListIcon from "../icons/ListIcon";
 import CubeIcon from "../icons/CubeIcon";
 import SwatchIcon from "../icons/SwatchIcon";
+import ShoppingBagIcon from "../icons/ShoppingBagIcon";
 
 export default function Sidebar() {
 
@@ -100,6 +101,10 @@ export default function Sidebar() {
                     <Link href={"/admin/users"} className={`${path.includes('users') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
                         <UsersIcon />
                         <h3 className="col-span-2">کاربر ها</h3>
+                    </Link>
+                    <Link href={"/admin/orders"} className={`${path.includes('orders') && 'active'} w-full grid grid-cols-3 cursor-pointer p-2 hover:bg-white hover:text-gray-800 rounded-r-lg`}>
+                        <ShoppingBagIcon />
+                        <h3 className="col-span-2">سفارش ها</h3>
                     </Link>
                 </div>
             </div>
