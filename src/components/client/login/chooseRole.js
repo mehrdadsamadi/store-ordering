@@ -53,7 +53,7 @@ export default function ChooseRole({ setLoading, phone }) {
             }
         )
             .then(() => {
-                if(role === ROLES.DRIVER) {
+                if(role === ROLES.DRIVER.name) {
                     return push("/")
                 } else {
                     setStep(3)
@@ -74,11 +74,11 @@ export default function ChooseRole({ setLoading, phone }) {
             {
                 step === 1 && (
                     <div className="grid grid-cols-2 gap-2 w-full">
-                        <div onClick={() => setRole(ROLES.STORE_OWNER)} className="rounded-xl p-4 border cursor-pointer hover:font-semibold flex items-center gap-2 justify-center">
+                        <div onClick={() => setRole(ROLES.STORE_OWNER.name)} className="rounded-xl p-4 border cursor-pointer hover:font-semibold flex items-center gap-2 justify-center">
                             <ShopStoreIcon />
                             <p>فروشگاه دار</p>
                         </div>
-                        <div onClick={() => setRole(ROLES.DRIVER)} className="rounded-xl p-4 border cursor-pointer hover:font-semibold flex items-center gap-2 justify-center">
+                        <div onClick={() => setRole(ROLES.DRIVER.name)} className="rounded-xl p-4 border cursor-pointer hover:font-semibold flex items-center gap-2 justify-center">
                             <TruckIcon />
                             <p>راننده</p>
                         </div>

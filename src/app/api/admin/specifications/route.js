@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     const { user } = useGetServerSession()
-    if (user?.role !== ROLES.ADMIN)
+    if (user?.role !== ROLES.ADMIN.name)
         return NextResponse.json({ error: "شما دسترسی به این بخش را ندارید" }, { status: 401 })
 
     try {
@@ -24,7 +24,7 @@ export async function GET() {
 
 export async function POST(req) {
     const { user } = useGetServerSession()
-    if (user?.role !== ROLES.ADMIN)
+    if (user?.role !== ROLES.ADMIN.name)
         return NextResponse.json({ error: "شما دسترسی به این بخش را ندارید" }, { status: 401 })
 
     try {
@@ -65,7 +65,7 @@ export async function POST(req) {
 
 export async function DELETE(req) {
     const { user } = useGetServerSession()
-    if (user?.role !== ROLES.ADMIN)
+    if (user?.role !== ROLES.ADMIN.name)
         return NextResponse.json({ error: "شما دسترسی به این بخش را ندارید" }, { status: 401 })
 
     try {

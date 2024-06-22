@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(_, { params: { specId } }) {
     const { user } = useGetServerSession()
-    if (user?.role !== ROLES.ADMIN)
+    if (user?.role !== ROLES.ADMIN.name)
         return NextResponse.json({ error: "شما دسترسی به این بخش را ندارید" }, { status: 401 })
 
     try {
@@ -21,7 +21,7 @@ export async function GET(_, { params: { specId } }) {
 
 export async function PUT(req, { params: { specId } }) {
     const { user } = useGetServerSession()
-    if (user?.role !== ROLES.ADMIN)
+    if (user?.role !== ROLES.ADMIN.name)
         return NextResponse.json({ error: "شما دسترسی به این بخش را ندارید" }, { status: 401 })
 
     try {

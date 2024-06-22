@@ -61,7 +61,7 @@ async function saveUser(phone, code) {
     if (existUserResult) {
         return (await updateUserOtp(phone, otp))
     }
-    return !!(await User.create({ phone, otp, role: ROLES.USER }))
+    return !!(await User.create({ phone, otp, role: ROLES.USER.name }))
 }
 
 async function checkExistUser(phone) {

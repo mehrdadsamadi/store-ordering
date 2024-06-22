@@ -142,7 +142,7 @@ export default function Login() {
         )
             .then((data) => {
                 const { role } = data
-                if (role && role !== ROLES.USER) {
+                if (role && role !== ROLES.USER.name) {
                     return push("/")
                 }
                 setStep(3)

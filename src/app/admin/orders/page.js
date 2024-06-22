@@ -1,9 +1,12 @@
 "use client"
 
 import Badge from "@/components/common/Badge";
+import ConfirmBtn from "@/components/common/ConfirmBtn";
 import Loading from "@/components/common/Loading";
 import Table from "@/components/common/Table";
 import Tooltip from "@/components/common/Tooltip";
+import ArrowleftIcon from "@/components/icons/ArrowLeftIcon";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import EditIcon from "@/components/icons/EditIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
 import { formatPriceNumber } from "@/helpers/formatPriceInput";
@@ -11,6 +14,7 @@ import { formatToPersianDate } from "@/helpers/formatToPersianDate";
 import { ORDER_STATUSES } from "@/helpers/orderStatuses";
 import { PAYMENT_METHODS } from "@/helpers/paymentMethods";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Orders() {
 
@@ -18,14 +22,129 @@ export default function Orders() {
     const [orders, setOrders] = useState([])
     const [filteredOrders, setFilteredOrders] = useState([])
     const [selectedFilter, setSelectedFilter] = useState(ORDER_STATUSES['PROCESSING'])
-    const [columns, setColumns] = useState([
+    // const [columns, setColumns] = useState([
+    //     {
+    //         accessorKey: 'items',
+    //         header: 'تعداد آیتم',
+    //         id: 'items',
+    //         cell: ({ row: { original } }) => {
+    //             return (
+    //                 <Tooltip direction="top" text={original.items.map(item => item.product.name).join('\n')}>
+    //                     <p>{original.items.length}</p>
+    //                 </Tooltip>
+    //             );
+    //         },
+    //     },
+    //     {
+    //         accessorKey: 'userPhone',
+    //         header: 'شماره تماس',
+    //         id: 'userPhone',
+    //     },
+    //     {
+    //         accessorKey: 'paid',
+    //         header: 'پرداخت',
+    //         id: 'paid',
+    //         cell: ({ row: { original } }) => {
+    //             return (
+    //                 original.paid ?
+    //                     <Badge className="!bg-green-500">پرداخت شده</Badge>
+    //                     : <Badge className="!bg-red-500">پرداخت نشده</Badge>
+    //             );
+    //         },
+    //     },
+    //     {
+    //         accessorKey: 'paymentMethod',
+    //         header: 'روش پرداخت',
+    //         id: 'paymentMethod',
+    //         cell: ({ row: { original } }) => {
+    //             return (
+    //                 <p>{Object.keys(PAYMENT_METHODS).map(key => (PAYMENT_METHODS[key].name === original.paymentMethod && PAYMENT_METHODS[key].text))}</p>
+    //             );
+    //         },
+    //     },
+    //     // {
+    //     //     accessorKey: 'status',
+    //     //     header: 'وضعیت سفارش',
+    //     //     id: 'status',
+    //     //     cell: ({ row: { original } }) => {
+    //     //         return (
+    //     //             <p>{Object.keys(ORDER_STATUSES).map(key => (ORDER_STATUSES[key].name === original.status && ORDER_STATUSES[key].persian))}</p>
+    //     //         );
+    //     //     },
+    //     // },
+    //     {
+    //         accessorKey: 'price',
+    //         header: 'قیمت',
+    //         id: 'price',
+    //         cell: ({ row: { original } }) => {
+    //             return (
+    //                 <span className="text-primary font-semibold">{formatPriceNumber(original.price)} تومان</span>
+    //             );
+    //         },
+    //     },
+    //     {
+    //         accessorKey: 'createdAt',
+    //         header: 'تاریخ سفارش',
+    //         id: 'createdAt',
+    //         cell: ({ row: { original } }) => {
+    //             return (
+    //                 <p>{formatToPersianDate(original.createdAt)}</p>
+    //             );
+    //         },
+    //     },
+    //     {
+    //         accessorKey: 'updatedAt',
+    //         header: 'تاریخ آخرین تغییر',
+    //         id: 'updatedAt',
+    //         cell: ({ row: { original } }) => {
+    //             return (
+    //                 <p>{formatToPersianDate(original.updatedAt)}</p>
+    //             );
+    //         },
+    //     },
+    //     {
+    //         accessorKey: 'actions',
+    //         header: '',
+    //         id: 'actions',
+    //         cell: ({ row: { original } }) => (
+    //             <div className="flex gap-2">
+    //                 <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
+    //                     <EditIcon />
+    //                 </button>
+    //                 <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
+    //                     <TrashIcon />
+    //                 </button>
+    //                 {
+    //                     ORDER_STATUSES[selectedFilter.prev] && (
+    //                         <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${ORDER_STATUSES[selectedFilter.prev].persian}`}>
+    //                             <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
+    //                                 <ArrowleftIcon />
+    //                             </button>
+    //                         </Tooltip>
+    //                     )
+    //                 }
+    //                 {
+    //                     ORDER_STATUSES[selectedFilter.next] && (
+    //                         <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${ORDER_STATUSES[selectedFilter.next].persian}`}>
+    //                             <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
+    //                                 <ArrowleftIcon />
+    //                             </button>
+    //                         </Tooltip>
+    //                     )
+    //                 }
+    //             </div>
+    //         ),
+    //     },
+    // ])
+
+    const getColumns = (selectedFilter) => [
         {
             accessorKey: 'items',
             header: 'تعداد آیتم',
             id: 'items',
             cell: ({ row: { original } }) => {
                 return (
-                    <Tooltip text={original.items.map(item => item.product.name).join('\n')}>
+                    <Tooltip direction="top" arrayText={original.items.map(item => item.product.name)}>
                         <p>{original.items.length}</p>
                     </Tooltip>
                 );
@@ -43,8 +162,8 @@ export default function Orders() {
             cell: ({ row: { original } }) => {
                 return (
                     original.paid ?
-                        <Badge className="bg-green-500">پرداخت شده</Badge>
-                        : <Badge className="bg-red-500">پرداخت نشده</Badge>
+                        <Badge className="!bg-green-500">پرداخت شده</Badge>
+                        : <Badge className="!bg-red-500">پرداخت نشده</Badge>
                 );
             },
         },
@@ -107,13 +226,31 @@ export default function Orders() {
                     <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
                         <EditIcon />
                     </button>
-                    <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
+                    <ConfirmBtn onConfirm={() => handleRemoveOrder(original._id)} className="rounded-full !p-2 hover:bg-gray-200">
                         <TrashIcon />
-                    </button>
+                    </ConfirmBtn>
+                    {
+                        ORDER_STATUSES[selectedFilter.prev] && (
+                            <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${ORDER_STATUSES[selectedFilter.prev].persian}`}>
+                                <button type="button" onClick={() => changeOrderStatus(original._id, ORDER_STATUSES[selectedFilter.prev].name)} className="rounded-full !p-2 hover:bg-gray-200">
+                                    <ArrowRightIcon />
+                                </button>
+                            </Tooltip>
+                        )
+                    }
+                    {
+                        ORDER_STATUSES[selectedFilter.next] && (
+                            <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${ORDER_STATUSES[selectedFilter.next].persian}`}>
+                                <button type="button" onClick={() => changeOrderStatus(original._id, ORDER_STATUSES[selectedFilter.next].name)} className="rounded-full !p-2 hover:bg-gray-200">
+                                    <ArrowleftIcon />
+                                </button>
+                            </Tooltip>
+                        )
+                    }
                 </div>
             ),
         },
-    ])
+    ];
 
     useEffect(() => {
         fetchOrders()
@@ -130,8 +267,61 @@ export default function Orders() {
             .then(res => res.json())
             .then(data => {
                 setOrders(data)
-                setFilteredOrders(data.filter(od => od.status === "processing"))
+                setFilteredOrders(data.filter(od => od.status === selectedFilter?.name))
             })
+            .finally(() => setLoading(false))
+    }
+
+    const handleRemoveOrder = async (orderId) => {
+        setLoading(true)
+
+        const removeOrderPromise = new Promise(async (resolve, reject) => {
+            const res = await fetch("/api/admin/orders", {
+                method: "DELETE",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ _id: orderId }),
+            })
+
+            const body = await res.json()
+            res.ok ? resolve(body) : reject(body)
+        })
+
+        await toast.promise(
+            removeOrderPromise,
+            {
+                loading: 'در حال حذف سفارش ...',
+                success: ({ message }) => message,
+                error: ({ error }) => error,
+            }
+        )
+            .then(() => fetchOrders())
+            .finally(() => setLoading(false))
+    }
+
+    const changeOrderStatus = async (orderId, statusName) => {
+        setLoading(true)
+
+        const nextStatusPromise = new Promise(async (resolve, reject) => {
+
+            const res = await fetch("/api/admin/orders", {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ _id: orderId, status: statusName }),
+            })
+
+            const body = await res.json()
+            res.ok ? resolve(body) : reject(body)
+        })
+
+        await toast.promise(
+            nextStatusPromise,
+            {
+                loading: 'در حال تغییر وضعیت سفارش',
+                success: ({ message }) => message,
+                error: ({ error }) => error,
+            }
+        )
+            .then(() => fetchOrders())
             .finally(() => setLoading(false))
     }
 
@@ -143,12 +333,17 @@ export default function Orders() {
                     <div className="border rounded-lg p-4 flex flex-col gap-4 items-center mt-2">
                         {
                             Object.keys(ORDER_STATUSES).map((key, index) => (
-                                <button key={index} type="button" onClick={() => setSelectedFilter(ORDER_STATUSES[key])} className={`w-full ${selectedFilter?.name === ORDER_STATUSES[key].name && 'submit'} `}>{ORDER_STATUSES[key].persian}</button>
+                                <button key={index} type="button" onClick={() => setSelectedFilter(ORDER_STATUSES[key])} className={`w-full flex justify-between ${selectedFilter?.name === ORDER_STATUSES[key].name && 'submit'} `}>
+                                    {ORDER_STATUSES[key].persian}
+                                    <span className="p-2 rounded-lg bg-gray-100 size-8 flex items-center justify-center text-primary">
+                                        {orders.filter(order => order.status === ORDER_STATUSES[key].name).length}
+                                    </span>
+                                </button>
                             ))
                         }
                     </div>
                     <div className="grow">
-                        <Table data={filteredOrders} columns={columns} />
+                        <Table data={filteredOrders} columns={getColumns(selectedFilter)} />
                     </div>
                 </div>
             </div>

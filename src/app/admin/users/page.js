@@ -1,9 +1,11 @@
 "use client"
 
+import Badge from "@/components/common/Badge";
 import Loading from "@/components/common/Loading";
 import Table from "@/components/common/Table";
 import EditIcon from "@/components/icons/EditIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
+import { ROLES } from "@/helpers/roles";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -34,6 +36,13 @@ export default function Users() {
             accessorKey: 'role',
             header: 'نقش',
             id: 'role',
+            cell: ({ row: { original } }) => {
+                return (
+                    <Badge>
+                        {Object.keys(ROLES).map(key => (ROLES[key].name === original.role && ROLES[key].persian))}
+                    </Badge>
+                );
+            },
         },
         {
             accessorKey: 'actions',

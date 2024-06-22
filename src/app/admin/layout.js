@@ -5,7 +5,7 @@ import { ROLES } from "@/helpers/roles";
 
 export default function AdminLayout({ children }) {
     const { user } = useGetServerSession()
-    if (user?.role !== ROLES.ADMIN) {
+    if (user?.role !== ROLES.ADMIN.name) {
         return redirect("/")
     }
 

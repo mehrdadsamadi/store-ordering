@@ -41,7 +41,7 @@
 
 import { useState } from 'react';
 
-const Tooltip = ({ text, children, direction = 'left' }) => {
+const Tooltip = ({ text, arrayText = [], children, direction = 'left' }) => {
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState({});
 
@@ -102,10 +102,18 @@ const Tooltip = ({ text, children, direction = 'left' }) => {
       {children}
       {visible && (
         <div
-          className="fixed bg-gray-700 text-white text-sm p-2 rounded-md shadow-lg z-50"
+          className="fixed bg-gray-700 text-white text-sm text-wrap p-2 rounded-md shadow-lg z-50 max-w-[200px]"
           style={{ ...position }}
         >
-          {text}
+          {
+            arrayText?.length > 0 ? (
+              arrayText.map((txt, index) => (
+                <p key={index} className='border-b pb-2 mb-2 last:border-b-0 last:pb-0 last:mb-0'>{txt}</p>
+              ))
+            ) : (
+              <p>{text}</p>
+            )
+          }
         </div>
       )}
     </div>

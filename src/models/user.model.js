@@ -11,7 +11,7 @@ const userSchema = new Schema({
         code: 0,
         expiresIn: 0
     }},
-    role: { type: String, default: ROLES.USER, enum: (Object.keys(ROLES).map(key => ROLES[key])) }
+    role: { type: String, default: ROLES.USER.name, enum: (Object.keys(ROLES).map(key => ROLES[key].name)) }
 }, {
     timestamps: true
 })
