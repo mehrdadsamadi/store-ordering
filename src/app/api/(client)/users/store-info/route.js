@@ -26,6 +26,7 @@ export async function PUT(req) {
         await Store.findOneAndUpdate({ phone: body.phone }, body)
 
         return NextResponse.json({ message: "اطلاعات شما با موفقیت ویرایش شد" })
+
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: error.message }, { status: 500 })

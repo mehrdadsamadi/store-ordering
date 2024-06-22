@@ -92,10 +92,11 @@ export default function StoreInfo({ setLoading, editingAddress = false, storeInf
 
     return (
         <form className="flex flex-col gap-4" onSubmit={submitStoreInfo}>
+            
             <div>
                 <label htmlFor="">موقعیت مکانی فروشگاه</label>
-                <div className="w-full h-[300px] overflow-hidden rounded-md">
-                    <Map setStoreLoc={setStoreLoc} center={editingAddress && [storeInfo.location.lat, storeInfo.location.lng]} />
+                <div className="w-[300px] h-[300px] overflow-hidden rounded-md mx-auto">
+                    <Map setStoreLoc={setStoreLoc} center={editingAddress ? [storeInfo.location.lat, storeInfo.location.lng] : [35.715298, 51.404343]} />
                 </div>
             </div>
 

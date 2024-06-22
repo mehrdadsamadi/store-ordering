@@ -11,6 +11,7 @@ import "@/models/specification.model"
 import "@/models/product.model"
 import "@/models/store.model"
 import "@/models/user.model"
+import "@/models/order.model"
 import "@/models/session.model"
 
 async function connectMongo() {
