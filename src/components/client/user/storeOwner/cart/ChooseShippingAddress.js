@@ -5,7 +5,7 @@ import EditIcon from "@/components/icons/EditIcon"
 import ExclamationCircleIcon from "@/components/icons/ExclamationCircleIcon"
 import { getClientSession } from "@/helpers/sessions"
 import { useEffect, useLayoutEffect, useState } from "react"
-import StoreInfo from "../../login/StoreInfo"
+import StoreInfo from "../../../login/StoreInfo"
 import Loading from "@/components/common/Loading"
 
 export default function ChooseShippingAddress({ setAddress }) {

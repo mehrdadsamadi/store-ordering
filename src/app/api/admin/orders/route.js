@@ -12,7 +12,7 @@ export async function GET() {
     try {
         await connectMongo()
 
-        return NextResponse.json(await Order.find().populate("address"))
+        return NextResponse.json(await Order.find().populate(["address", "shippingInfo.driver"]))
     } catch (error) {
         console.log(error);
         return NextResponse.json({error: error.message}, {status: 500})

@@ -1,7 +1,7 @@
 "use client"
 
-import ChoosePaymentMethod from "@/components/client/user/cart/ChoosePaymentMethod";
-import ChooseShippingAddress from "@/components/client/user/cart/ChooseShippingAddress";
+import ChoosePaymentMethod from "@/components/client/user/storeOwner/cart/ChoosePaymentMethod";
+import ChooseShippingAddress from "@/components/client/user/storeOwner/cart/ChooseShippingAddress";
 import Alert from "@/components/common/Alert";
 import ConfirmBtn from "@/components/common/ConfirmBtn";
 import Loading from "@/components/common/Loading";
@@ -90,7 +90,7 @@ export default function CartPage() {
             )
                 .then(() => {
                     clearCart({ hasToast: false })
-                    return push("/user/orders")
+                    return push("/user/storeOwner/orders")
                 })
                 .finally(() => setLoading(false))
         }

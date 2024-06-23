@@ -19,11 +19,21 @@ export default function OrdersPage() {
 
     const [loading, setLoading] = useState(false)
     const [orders, setOrders] = useState([])
-    const [currentOrders, setCurrentOrders] = useState([])
+    const [currentOrdersLength, setCurrentOrdersLength] = useState([])
+    const [filteredOrders, setFilteredOrders] = useState([])
+    const [selectedFilter, setSelectedFilter] = useState("current")
 
     useEffect(() => {
         fetchUserOrders()
     }, [])
+    
+    useEffect(() => {
+        if(selectedFilter === "current") {
+            setFilteredOrders(orders.filter(od => (od.status !== ORDER_STATUSES.DELIVERY.name && od.status !== ORDER_STATUSES.RETURNED.name && od.status !== ORDER_STATUSES.CANCELED.name)))
+        } else {
+            setFilteredOrders(orders.filter(od => (od.status === ORDER_STATUSES[selectedFilter.toUpperCase()].name)))
+        }
+    }, [selectedFilter])
 
     const fetchUserOrders = () => {
         setLoading(true)
@@ -31,9 +41,9 @@ export default function OrdersPage() {
         fetch("/api/orders")
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 setOrders(data)
-                setCurrentOrders(data.filter(od => (od.status !== ORDER_STATUSES.DELIVERY.name && od.status !== ORDER_STATUSES.RETURNED.name && od.status !== ORDER_STATUSES.CANCELED.name)))
+                setFilteredOrders(data.filter(od => (od.status !== ORDER_STATUSES.DELIVERY.name && od.status !== ORDER_STATUSES.RETURNED.name && od.status !== ORDER_STATUSES.CANCELED.name)))
+                setCurrentOrdersLength(data.filter(od => (od.status !== ORDER_STATUSES.DELIVERY.name && od.status !== ORDER_STATUSES.RETURNED.name && od.status !== ORDER_STATUSES.CANCELED.name)).length)
             })
             .finally(() => setLoading(false))
     }
@@ -53,18 +63,18 @@ export default function OrdersPage() {
                             <div className="md:flex">
                                 <ul className="flex-column space-y space-y-4 w-56 font-medium md:me-4 mb-4 md:mb-0">
                                     <li>
-                                        <div className="inline-flex items-center gap-2 px-4 py-3 text-primary border border-primary bg-primary text-white rounded-lg w-full " aria-current="page">
+                                        <div onClick={() => setSelectedFilter("current")} className={`inline-flex items-center cursor-pointer hover:bg-gray-100 gap-2 px-4 py-3 text-primary border border-primary rounded-lg w-full ${selectedFilter === "current" && '!bg-primary !text-white'}`} aria-current="page">
                                             <ClockIcon />
                                             <div className="flex items-center grow justify-between">
                                                 <p>جاری</p>
                                                 <div className="rounded-md flex items-center justify-center bg-gray-300 text-primary size-7">
-                                                    {currentOrders.length}
+                                                    {currentOrdersLength}
                                                 </div>
                                             </div>
                                         </div>
                                     </li>
                                     <li>
-                                        <div className="inline-flex items-center gap-2 px-4 py-3 rounded-lg text-primary border border-primary w-full">
+                                        <div onClick={() => setSelectedFilter(ORDER_STATUSES.DELIVERY.name)} className={`inline-flex items-center cursor-pointer hover:bg-gray-100 gap-2 px-4 py-3 rounded-lg text-primary border border-primary w-full ${selectedFilter === ORDER_STATUSES.DELIVERY.name && '!bg-primary !text-white'}`}>
                                             <CheckIcon />
                                             <div className="flex items-center grow justify-between">
                                                 <p>تحویل شده</p>
@@ -75,7 +85,7 @@ export default function OrdersPage() {
                                         </div>
                                     </li>
                                     <li>
-                                        <div className="inline-flex items-center gap-2 px-4 py-3 rounded-lg text-primary border border-primary w-full">
+                                        <div onClick={() => setSelectedFilter(ORDER_STATUSES.RETURNED.name)} className={`inline-flex items-center cursor-pointer hover:bg-gray-100 gap-2 px-4 py-3 rounded-lg text-primary border border-primary w-full ${selectedFilter === ORDER_STATUSES.RETURNED.name && '!bg-primary !text-white'}`}>
                                             <ArrowUturnRightIcon />
                                             <div className="flex items-center grow justify-between">
                                                 <p>مرجوع شده</p>
@@ -86,7 +96,7 @@ export default function OrdersPage() {
                                         </div>
                                     </li>
                                     <li>
-                                        <div className="inline-flex items-center gap-2 px-4 py-3 rounded-lg text-primary border border-primary w-full">
+                                        <div onClick={() => setSelectedFilter(ORDER_STATUSES.CANCELED.name)} className={`inline-flex items-center cursor-pointer hover:bg-gray-100 gap-2 px-4 py-3 rounded-lg text-primary border border-primary w-full ${selectedFilter === ORDER_STATUSES.CANCELED.name && '!bg-primary !text-white'}`}>
                                             <XmarkIcon />
                                             <div className="flex items-center grow justify-between">
                                                 <p>لغو شده</p>
@@ -99,8 +109,8 @@ export default function OrdersPage() {
                                 </ul>
                                 <div className="p-6 text-medium border border-primary rounded-lg w-full flex flex-col gap-4">
                                     {
-                                        currentOrders?.length > 0 ? (
-                                            currentOrders.map(co => (
+                                        filteredOrders?.length > 0 ? (
+                                            filteredOrders.map(co => (
                                                 <div key={co._id} className="border rounded-md p-4 flex gap-4">
                                                     <div className="flex flex-col gap-4">
                                                         <div className="w-[200px]">
@@ -142,7 +152,7 @@ export default function OrdersPage() {
                                                 </div>
                                             ))
                                         ) : (
-                                            <Alert text="سفارش جاری ندارید" />
+                                            <Alert text="سفارشی در این بخش ندارید" />
                                         )
                                     }
                                 </div>

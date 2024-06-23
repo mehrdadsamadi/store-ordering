@@ -1,12 +1,27 @@
 "use client"
 
-import ProductCard from "@/components/client/user/ProductCard"
+import ProductCard from "@/components/client/user/storeOwner/ProductCard"
 import Loading from "@/components/common/Loading"
-import { useEffect, useState } from "react"
+import { ROLES } from "@/helpers/roles"
+import { getClientSession } from "@/helpers/sessions"
+import { useRouter } from "next/navigation"
+import { useEffect, useLayoutEffect, useState } from "react"
 
-export default function UserPage() {
+export default function StorOwnerPage() {
+
+    const { push } = useRouter()
+
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
+
+    useLayoutEffect(() => {
+        getClientSession()
+            .then(res => res.json())
+            .then(user => {
+                if (user && user.role !== ROLES.STORE_OWNER.name)
+                    return push("/")
+            })
+    }, [])
 
     useEffect(() => {
         fetchProducts()
@@ -23,7 +38,7 @@ export default function UserPage() {
 
     return (
         <section>
-            <Loading loading={loading}/>
+            <Loading loading={loading} />
             {
                 products?.length > 0 && (
                     <div className="grid grid-cols-6 gap-2">

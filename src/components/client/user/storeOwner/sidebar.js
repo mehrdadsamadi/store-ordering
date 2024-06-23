@@ -16,19 +16,19 @@ export default function Sidebar() {
             <div className="bg-primary text-white rounded-full flex flex-col items-center p-2 gap-3 overflow-y-auto">
 
                 <Tooltip text="خانه">
-                    <Link href={"/user"} className={`${path === '/user' && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
+                    <Link href={"/user/storeOwner"} className={`${path === '/user/storeOwner' && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
                         <HomeIcon className="size-7" />
                     </Link>
                 </Tooltip>
 
                 <Tooltip text="سبد خرید">
-                    <Link href={"/user/cart"} className={`${path.includes('cart') && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
+                    <Link href={"/user/storeOwner/cart"} className={`${path.includes('storeOwner/cart') && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
                         <ShoppingCartIcon className="size-7" />
                     </Link>
                 </Tooltip>
 
                 <Tooltip text="سفارش ها">
-                    <Link href={"/user/orders"} className={`${path.includes('orders') && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
+                    <Link href={"/user/storeOwner/orders"} className={`${path.includes('storeOwner/orders') && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
                         <ShoppingBagIcon className="size-7" />
                     </Link>
                 </Tooltip>
