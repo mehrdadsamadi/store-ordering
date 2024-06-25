@@ -37,14 +37,16 @@ function Routing({ map, startPoint, endPoint }) {
 function MyComponent({ onMove, canRouting, startPoint, endPoint }) {
     const map = useMapEvents({
         moveend: () => {
-            onMove(map.getCenter())
+            if(!canRouting) {
+                onMove(map.getCenter())
+            }
         }
     })
 
     return canRouting ? <Routing map={map} startPoint={startPoint} endPoint={endPoint} /> : null;
 }
 
-export default function Map({ setStoreLoc, canMove = true, center = [35.715298, 51.404343], canRouting = false, startPoint = [], endPoint = []}) {
+export default function Map({ setStoreLoc, canMove = true, center = [35.715298, 51.404343], canRouting = false, startPoint = [], endPoint = [] }) {
 
     return (
         <div className='w-full h-full relative'>
@@ -57,11 +59,15 @@ export default function Map({ setStoreLoc, canMove = true, center = [35.715298, 
                 className='w-full h-full z-10'
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <MyComponent onMove={setStoreLoc} canRouting={canRouting} startPoint={startPoint} endPoint={endPoint}/>
+                <MyComponent onMove={setStoreLoc} canRouting={canRouting} startPoint={startPoint} endPoint={endPoint} />
             </MapContainer>
-            <div className='z-50 absolute' style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                <LocIcon className='w-12 h-12' />
-            </div>
+            {
+                !canRouting && (
+                    <div className='z-50 absolute' style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                        <LocIcon className='w-12 h-12' />
+                    </div>
+                )
+            }
         </div>
     );
 }

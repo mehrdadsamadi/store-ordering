@@ -205,7 +205,7 @@ export default function Categories() {
                     )
                 }
                 <Loading loading={loading} />
-                <Dialog showDialog={showDialog} setShowDialog={setShowDialog} requireFields={[categoryName]} title="ایجاد دسته بندی" onSubmit={handleCreateCategory} onClose={handleCloseDialog}>
+                <Dialog showDialog={showDialog} requireFields={[categoryName]} title="ایجاد دسته بندی" onSubmit={handleCreateCategory} onClose={handleCloseDialog}>
                     <div className="w-[300px] h-[200px]">
                         <EditableImage link={categoryImage} setLink={setCategoryImage} folder="categories" />
                     </div>

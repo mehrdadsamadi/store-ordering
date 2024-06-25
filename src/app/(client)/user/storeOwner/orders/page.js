@@ -38,7 +38,7 @@ export default function OrdersPage() {
     const fetchUserOrders = () => {
         setLoading(true)
 
-        fetch("/api/orders")
+        fetch("/api/orders/user")
             .then(res => res.json())
             .then(data => {
                 setOrders(data)

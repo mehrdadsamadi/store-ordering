@@ -114,30 +114,17 @@ export default function Orders() {
     //                 <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
     //                     <TrashIcon />
     //                 </button>
-    //                 {
-    //                     ORDER_STATUSES[selectedFilter.prev] && (
-    //                         <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${ORDER_STATUSES[selectedFilter.prev].persian}`}>
-    //                             <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
-    //                                 <ArrowleftIcon />
-    //                             </button>
-    //                         </Tooltip>
-    //                     )
-    //                 }
-    //                 {
-    //                     ORDER_STATUSES[selectedFilter.next] && (
-    //                         <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${ORDER_STATUSES[selectedFilter.next].persian}`}>
-    //                             <button type="button" onClick={() => { console.log(original); }} className="rounded-full !p-2 hover:bg-gray-200">
-    //                                 <ArrowleftIcon />
-    //                             </button>
-    //                         </Tooltip>
-    //                     )
-    //                 }
     //             </div>
     //         ),
     //     },
     // ])
 
     const getColumns = (selectedFilter) => [
+        {
+            accessorKey: '_id',
+            header: 'شماره سفارش',
+            id: '_id'
+        },
         {
             accessorKey: 'items',
             header: 'تعداد آیتم',

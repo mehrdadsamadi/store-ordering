@@ -169,7 +169,7 @@ export default function Brands() {
                     )
                 }
                 <Loading loading={loading} />
-                <Dialog showDialog={showDialog} setShowDialog={setShowDialog} requireFields={[brandName]} title="ایجاد برند" onSubmit={handleCreateBrand} onClose={handleCloseDialog}>
+                <Dialog showDialog={showDialog} requireFields={[brandName]} title="ایجاد برند" onSubmit={handleCreateBrand} onClose={handleCloseDialog}>
                     <div className="w-[300px] h-[200px]">
                         <EditableImage link={brandImage} setLink={setBrandImage} folder="brands" />
                     </div>

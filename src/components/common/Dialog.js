@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
 
-export default function Dialog({ showDialog, setShowDialog, title, requireFields, children, onSubmit, onClose, showBtns = true }) {
+export default function Dialog({ showDialog, title, submitBtnText, requireFields, children, onSubmit, onClose, showBtns = true }) {
 
     const [disable, setDisable] = useState(true)
 
@@ -33,7 +33,7 @@ export default function Dialog({ showDialog, setShowDialog, title, requireFields
                         {
                             showBtns && (
                                 <div className="sticky bottom-0 flex items-center justify-between bg-white mt-4">
-                                    <button type="button" disabled={requireFields && disable} onClick={onSubmit} className="submit">{title}</button>
+                                    <button type="button" disabled={requireFields && disable} onClick={onSubmit} className="submit">{submitBtnText ? submitBtnText : title}</button>
                                     <button type="button" onClick={onClose}>انصراف</button>
                                 </div>
                             )

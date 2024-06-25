@@ -99,7 +99,7 @@ export default function ChooseShippingAddress({ setAddress }) {
                                 <p className="text-sm font-semibold">ویرایش آدرس</p>
                             </div>
                         </div>
-                        <Dialog showDialog={showDialog} setShowDialog={setShowDialog} title="ویرایش آدرس" showBtns={false} onClose={handleCloseDialog}>
+                        <Dialog showDialog={showDialog} title="ویرایش آدرس" showBtns={false} onClose={handleCloseDialog}>
                             <StoreInfo setLoading={setLoading} editingAddress storeInfo={storeInfo} />
                         </Dialog>
                     </div>
