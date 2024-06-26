@@ -12,7 +12,6 @@ export async function PUT(req) {
         await connectMongo()
 
         const {orderId, shippingCost} = await req.json()
-        
         await Order.findByIdAndUpdate(orderId, {shippingInfo : {driver: user._id, shippingCost}})
 
         return NextResponse.json({message: "قیمت پیشنهادی شما با موفقیت ثبت شد"})

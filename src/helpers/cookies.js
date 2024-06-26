@@ -8,7 +8,7 @@ export const setCookie = (data) => {
 
     let cookieObject = {};
 
-    ['phone', 'first_name', 'last_name', 'role', 'avatar'].map(item => {
+    ['phone', 'first_name', 'last_name', 'role', 'avatar', "_id"].map(item => {
         if(data[item]) {
             cookieObject[item] = data[item]
         } else if(prevCookie) {

@@ -126,6 +126,16 @@ export default function DriverPage() {
             },
         },
         {
+            accessorKey: 'remainingBiddingTime',
+            header: 'زمان باقی مانده',
+            id: 'remainingBiddingTime',
+            cell: ({ row: { original } }) => {
+                return (
+                    <p>{formatToPersianDate(original.updatedAt)}</p>
+                );
+            },
+        },
+        {
             accessorKey: 'shippingInfo',
             header: 'کمترین قیمت پیشنهادی',
             id: 'shippingInfo',

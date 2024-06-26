@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
     const {user} = useGetServerSession()
     if(!user)
-        return NextResponse.json({error: "شما دسترسی به این بخش را ندارید"}, {status: 401})
+        return NextResponse.json({error: "ابتدا در حساب کاربری خود لاگین کنید"}, {status: 401})
 
     try {
         await connectMongo()
