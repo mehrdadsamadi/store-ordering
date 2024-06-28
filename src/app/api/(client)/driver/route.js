@@ -11,7 +11,7 @@ export async function GET(req) {
         }
   
         const intervalId = setInterval(async () => {
-          const orders = await Order.find().populate("address")
+          const orders = await Order.find().populate(["address", "shippingInfo"])
           sendEvent(orders);
         }, 1000);
   

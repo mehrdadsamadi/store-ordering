@@ -2,6 +2,7 @@ import localFont from "next/font/local"
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import CartProviders from "@/prodviders/client/CartProvider";
+import "@/helpers/lowestBid"
 
 const danaFont = localFont({
   src: [

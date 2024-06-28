@@ -11,7 +11,7 @@ export async function GET() {
     try {
         await connectMongo()
         
-        return NextResponse.json(await Order.find().populate("address"))
+        return NextResponse.json(await Order.find().populate(["address", "shippingInfo"]))
     } catch (error) {
         console.log(error);
         return NextResponse.json({error: error.message}, {status: 500})
@@ -27,8 +27,10 @@ export async function POST(req) {
         await connectMongo()
 
         const body = await req.json()
-        
-        await Order.create({...body, userPhone: user.phone})
+
+        const endBiddingAt = new Date(new Date().getTime() + 30 * 60 * 1000); // 30 دقیقه بعد
+
+        await Order.create({...body, userPhone: user.phone, endBiddingAt})
 
         return NextResponse.json({message: "سفارش شما با موفقیت ثبت شد ، از بخش سفارشات میتوانید سفارش خود را پیگیری کنید"})
     } catch (error) {

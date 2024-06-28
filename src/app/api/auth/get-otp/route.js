@@ -1,6 +1,7 @@
 import connectMongo from "@/helpers/connectMongo";
 import { getRandomFourDigit } from "@/helpers/getRandomFourDigit"
 import { ROLES } from "@/helpers/roles";
+import { sendSms } from "@/helpers/sendSms";
 import User from "@/models/user.model"
 import { NextResponse } from "next/server";
 
@@ -42,13 +43,13 @@ export async function POST(req) {
     }
 }
 
-async function sendSms(data) {
-    await fetch("http://ippanel.com/api/select", {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
-    })
-}
+// async function sendSms(data) {
+//     await fetch("http://ippanel.com/api/select", {
+//         method: 'post',
+//         body: JSON.stringify(data),
+//         headers: { 'Content-Type': 'application/json' }
+//     })
+// }
 
 async function saveUser(phone, code) {
     let otp = {

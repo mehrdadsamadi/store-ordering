@@ -3,14 +3,10 @@ import { PAYMENT_METHODS } from "@/helpers/paymentMethods";
 
 const { Schema, model, models } = require("mongoose");
 
-const driverSchema = new Schema({
-    driver: { type: Schema.Types.ObjectId, ref: "user", required: true},
-    shippingCost: { type: String, required: true },
-})
-
 const orderSchema = new Schema({
     address: { type: Schema.Types.ObjectId, ref: "store", required: true },
-    shippingInfo: { type: driverSchema },
+    shippingInfo: {type: Schema.Types.ObjectId, ref: "bid", default: null},
+    endBiddingAt: { type: Date, required: true },
     items: { type: [Object], required: true },
     paymentMethod: { type: String, default: PAYMENT_METHODS.INTERNET.name, enum: (Object.keys(PAYMENT_METHODS).map(key => PAYMENT_METHODS[key].name)) },
     paid: { type: Boolean, default: false },

@@ -8,6 +8,7 @@ import {
 import { useState } from 'react';
 import ChevronDoubleLeftIcon from '../icons/ChevronDoubleLeftIcon';
 import ChevronDoubleRightIcon from '../icons/ChevronDoubleRightIcon';
+import Alert from './Alert';
 
 export default function DataTable({ columns, data }) {
 
@@ -111,18 +112,24 @@ export default function DataTable({ columns, data }) {
                     ))}
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {table.getRowModel().rows.map(row => (
-                        <tr className='bg-gray-100' key={row.id}>
-                            {row.getVisibleCells().map(cell => (
-                                <td
-                                    key={cell.id}
-                                    className={`px-6 py-2 whitespace-nowrap text-sm text-gray-900`}
-                                >
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
+                    {
+                        data?.length === 0 ? (
+                            <Alert text="داده ای جهت نمایش وجود ندارد"/>
+                        ) : (
+                            table.getRowModel().rows.map(row => (
+                                <tr className='bg-gray-100' key={row.id}>
+                                    {row.getVisibleCells().map(cell => (
+                                        <td
+                                            key={cell.id}
+                                            className={`px-6 py-2 whitespace-nowrap text-sm text-gray-900`}
+                                        >
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        ) 
+                    }
                 </tbody>
             </table>
 

@@ -1,5 +1,6 @@
 "use client"
 
+import Alert from "@/components/common/Alert";
 import Badge from "@/components/common/Badge";
 import ConfirmBtn from "@/components/common/ConfirmBtn";
 import Dialog from "@/components/common/Dialog";
@@ -171,7 +172,7 @@ export default function DriverPage() {
     ])
 
     const handleBiddingSubmit = async (orderId) => {
-        if(bidding >= dialogData?.shippingInfo?.shippingCost) {
+        if (bidding >= dialogData?.shippingInfo?.shippingCost) {
             return toast.error("قیمت پیشنهادی شما باید از کمترین قیمت پایین تر باشد")
         }
 
@@ -197,7 +198,10 @@ export default function DriverPage() {
                 error: ({ error }) => error,
             }
         )
-            .then(() => fetchOrders())
+            .then(() => {
+                fetchOrders()
+                setBidding('')
+            })
             .finally(() => {
                 setLoading(false)
                 setShowBiddingDialog(false)
@@ -256,7 +260,7 @@ export default function DriverPage() {
 
             </Dialog>
 
-            <Dialog showDialog={showBiddingDialog} title="ثبت قیمت پیشنهادی" submitBtnText="ثبت" onSubmit={() => handleBiddingSubmit(dialogData._id)} onClose={() => {setShowBiddingDialog(false); setBidding('')}}>
+            <Dialog showDialog={showBiddingDialog} title="ثبت قیمت پیشنهادی" submitBtnText="ثبت" onSubmit={() => handleBiddingSubmit(dialogData._id)} onClose={() => { setShowBiddingDialog(false); setBidding('') }}>
                 <div className="h-11 mb-10">
                     <input type="text" value={bidding} onChange={e => setBidding(e.target.value)} className="!mb-0" placeholder="پیشنهاد قیمت حمل" />
                     <p className="text-sm text-center mt-1">{formatPriceNumber(bidding)} تومان</p>
