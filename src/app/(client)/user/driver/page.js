@@ -13,6 +13,7 @@ import { formatToPersianDate } from "@/helpers/formatToPersianDate";
 import { ORDER_STATUSES } from "@/helpers/orderStatuses";
 import { ROLES } from "@/helpers/roles";
 import { getClientSession } from "@/helpers/sessions";
+import { timeUntil } from "@/helpers/timeUntil";
 import { useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -132,7 +133,7 @@ export default function DriverPage() {
             id: 'remainingBiddingTime',
             cell: ({ row: { original } }) => {
                 return (
-                    <p>{formatToPersianDate(original.updatedAt)}</p>
+                    <p dir="ltr">{timeUntil(original.endBiddingAt)}</p>
                 );
             },
         },
@@ -253,7 +254,7 @@ export default function DriverPage() {
                 <DataTable data={orders} columns={columns} />
             </div>
 
-            <Dialog showDialog={showDialog} title="مسیر یابی آدرس" submitBtnText="مسیر یابی توسط نشان" onClose={() => setShowDialog(false)}>
+            <Dialog showDialog={showDialog} title="مسیر یابی آدرس" submitBtnText="مسیر یابی توسط نشان" onSubmit={() =>  window.open(`https://nshn.ir/?lat=${dialogData?.address.location.lat}&lng=${dialogData?.address.location.lng}`)} onClose={() => setShowDialog(false)}>
                 <div className="w-[300px] h-[300px] overflow-hidden rounded-md mx-auto">
                     <Map canRouting startPoint={[35.715298, 51.404343]} endPoint={[dialogData?.address.location.lat, dialogData?.address.location.lng]} center={[35.715298, 51.404343]} />
                 </div>

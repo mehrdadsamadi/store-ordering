@@ -19,5 +19,5 @@ export async function logout() {
             error: ({ error }) => error,
         }
     )
-
+    .then(() => window.location.href = "/login")
 }

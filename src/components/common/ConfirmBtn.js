@@ -7,7 +7,7 @@ export default function ConfirmBtn({ children, onConfirm, className, title="بر
         <>
             {
                 showConfirm && (
-                    <div className="fixed bg-black/30 inset-0 flex items-center justify-center h-full">
+                    <div className="fixed bg-black/30 inset-0 flex items-center justify-center h-full text-primary z-50">
                         <div className="w-72 bg-white p-4 rounded-lg">
                             <div className="text-center">{title}</div>
                             <div className="grid grid-cols-2 w-full gap-2 mt-4">

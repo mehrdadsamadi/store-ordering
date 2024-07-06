@@ -107,7 +107,7 @@ export default function OrdersPage() {
                                         </div>
                                     </li>
                                 </ul>
-                                <div className="p-6 text-medium border border-primary rounded-lg w-full flex flex-col gap-4">
+                                <div className="p-6 text-medium border border-primary rounded-lg w-full flex flex-col gap-4 overflow-y-auto h-[85vh]">
                                     {
                                         filteredOrders?.length > 0 ? (
                                             filteredOrders.map(co => (

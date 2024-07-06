@@ -1,9 +1,11 @@
 "use client"
 
+import ConfirmBtn from "@/components/common/ConfirmBtn";
 import Tooltip from "@/components/common/Tooltip";
+import ArrowLeftStartOnRectangleIcon from "@/components/icons/ArrowLeftStartOnRectangleIcon";
 import HomeIcon from "@/components/icons/HomeIcon";
-import ShoppingBagIcon from "@/components/icons/ShoppingBagIcon";
-import ShoppingCartIcon from "@/components/icons/ShoppingCartIcon";
+import TruckIcon from "@/components/icons/TruckIcon";
+import { logout } from "@/helpers/logout";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -16,22 +18,22 @@ export default function Sidebar() {
             <div className="bg-primary text-white rounded-full flex flex-col items-center p-2 gap-3 overflow-y-auto">
 
                 <Tooltip text="خانه">
-                    <Link href={"/user/driver"} className={`${path === '/user/driver' && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
+                    <Link href={"/user/driver"} className={`${path === '/user/driver' && 'active'} flex items-center justify-center rounded-full size-16 border-none hover:bg-gray-50/20`}>
                         <HomeIcon className="size-7" />
                     </Link>
                 </Tooltip>
 
-                {/* <Tooltip text="سبد خرید">
-                    <Link href={"/user/storeOwner/cart"} className={`${path.includes('cart') && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
-                        <ShoppingCartIcon className="size-7" />
+                <Tooltip text="سفارشات پذیرفته شده" width={110}>
+                    <Link href={"/user/driver/orders"} className={`${path === '/user/driver/orders' && 'active'} flex items-center justify-center rounded-full size-16 border-none hover:bg-gray-50/20`}>
+                        <TruckIcon className="size-7" />
                     </Link>
                 </Tooltip>
 
-                <Tooltip text="سفارش ها">
-                    <Link href={"/user/storeOwner/orders"} className={`${path.includes('orders') && 'active'} flex items-center justify-center rounded-full size-16 border-none text-white hover:bg-gray-50/20`}>
-                        <ShoppingBagIcon className="size-7" />
-                    </Link>
-                </Tooltip> */}
+                <Tooltip text="خروج">
+                    <ConfirmBtn onConfirm={logout} confirmBtnText="خروج" title="برای خروج مطمعن هستید؟" className="flex items-center justify-center rounded-full size-16 border-none hover:bg-gray-50/20">
+                        <ArrowLeftStartOnRectangleIcon className="size-7" />
+                    </ConfirmBtn>
+                </Tooltip>
             </div>
         </aside>
     )

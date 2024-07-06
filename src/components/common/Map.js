@@ -37,7 +37,7 @@ function Routing({ map, startPoint, endPoint }) {
 function MyComponent({ onMove, canRouting, startPoint, endPoint }) {
     const map = useMapEvents({
         moveend: () => {
-            if(!canRouting) {
+            if (!canRouting) {
                 onMove(map.getCenter())
             }
         }

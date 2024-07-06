@@ -21,7 +21,8 @@ export default function Orders() {
     const [loading, setLoading] = useState(true)
     const [orders, setOrders] = useState([])
     const [filteredOrders, setFilteredOrders] = useState([])
-    const [selectedFilter, setSelectedFilter] = useState(ORDER_STATUSES['PROCESSING'])
+    const [selectedFilter, setSelectedFilter] = useState(ORDER_STATUSES['CONFIRMATION'])
+    const [driverStatuses, setDriverStatuses] = useState({...ORDER_STATUSES})
     // const [columns, setColumns] = useState([
     //     {
     //         accessorKey: 'items',
@@ -210,25 +211,25 @@ export default function Orders() {
             id: 'actions',
             cell: ({ row: { original } }) => (
                 <div className="flex gap-2">
-                    <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
+                    {/* <button type="button" className="rounded-full !p-2 hover:bg-gray-200">
                         <EditIcon />
                     </button>
                     <ConfirmBtn onConfirm={() => handleRemoveOrder(original._id)} className="rounded-full !p-2 hover:bg-gray-200">
                         <TrashIcon />
-                    </ConfirmBtn>
+                    </ConfirmBtn> */}
                     {
-                        ORDER_STATUSES[selectedFilter.prev] && (
-                            <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${ORDER_STATUSES[selectedFilter.prev].persian}`}>
-                                <button type="button" onClick={() => changeOrderStatus(original._id, ORDER_STATUSES[selectedFilter.prev].name)} className="rounded-full !p-2 hover:bg-gray-200">
+                        driverStatuses[selectedFilter.prev] && (
+                            <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${driverStatuses[selectedFilter.prev].persian}`}>
+                                <button type="button" onClick={() => changeOrderStatus(original._id, driverStatuses[selectedFilter.prev].name)} className="rounded-full !p-2 hover:bg-gray-200">
                                     <ArrowRightIcon />
                                 </button>
                             </Tooltip>
                         )
                     }
                     {
-                        ORDER_STATUSES[selectedFilter.next] && (
-                            <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${ORDER_STATUSES[selectedFilter.next].persian}`}>
-                                <button type="button" onClick={() => changeOrderStatus(original._id, ORDER_STATUSES[selectedFilter.next].name)} className="rounded-full !p-2 hover:bg-gray-200">
+                        driverStatuses[selectedFilter.next] && (
+                            <Tooltip direction="top" text={`انتفال وضعیت سفارش به ${driverStatuses[selectedFilter.next].persian}`}>
+                                <button type="button" onClick={() => changeOrderStatus(original._id, driverStatuses[selectedFilter.next].name)} className="rounded-full !p-2 hover:bg-gray-200">
                                     <ArrowleftIcon />
                                 </button>
                             </Tooltip>
@@ -240,6 +241,9 @@ export default function Orders() {
     ];
 
     useEffect(() => {
+        delete driverStatuses.PROCESSING
+        delete driverStatuses.CANCELED
+        
         fetchOrders()
     }, [])
 
@@ -250,7 +254,7 @@ export default function Orders() {
     const fetchOrders = () => {
         setLoading(true)
 
-        fetch("/api/admin/orders")
+        fetch("/api/orders")
             .then(res => res.json())
             .then(data => {
                 setOrders(data.reverse())
@@ -259,38 +263,38 @@ export default function Orders() {
             .finally(() => setLoading(false))
     }
 
-    const handleRemoveOrder = async (orderId) => {
-        setLoading(true)
+    // const handleRemoveOrder = async (orderId) => {
+    //     setLoading(true)
 
-        const removeOrderPromise = new Promise(async (resolve, reject) => {
-            const res = await fetch("/api/admin/orders", {
-                method: "DELETE",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ _id: orderId }),
-            })
+    //     const removeOrderPromise = new Promise(async (resolve, reject) => {
+    //         const res = await fetch("/api/orders", {
+    //             method: "DELETE",
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({ _id: orderId }),
+    //         })
 
-            const body = await res.json()
-            res.ok ? resolve(body) : reject(body)
-        })
+    //         const body = await res.json()
+    //         res.ok ? resolve(body) : reject(body)
+    //     })
 
-        await toast.promise(
-            removeOrderPromise,
-            {
-                loading: 'در حال حذف سفارش ...',
-                success: ({ message }) => message,
-                error: ({ error }) => error,
-            }
-        )
-            .then(() => fetchOrders())
-            .finally(() => setLoading(false))
-    }
+    //     await toast.promise(
+    //         removeOrderPromise,
+    //         {
+    //             loading: 'در حال حذف سفارش ...',
+    //             success: ({ message }) => message,
+    //             error: ({ error }) => error,
+    //         }
+    //     )
+    //         .then(() => fetchOrders())
+    //         .finally(() => setLoading(false))
+    // }
 
     const changeOrderStatus = async (orderId, statusName) => {
         setLoading(true)
 
         const nextStatusPromise = new Promise(async (resolve, reject) => {
 
-            const res = await fetch("/api/admin/orders", {
+            const res = await fetch("/api/orders", {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ _id: orderId, status: statusName }),
@@ -316,14 +320,15 @@ export default function Orders() {
         <section className="gap-4 flex flex-col h-full">
             <div className="w-full p-4 rounded-lg bg-white h-full relative">
                 <Loading loading={loading} />
+                {/* <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=505319&Code=0deLhhr5L8TMTemLlTlLeSb6i9IJq2Yb'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=505319&Code=0deLhhr5L8TMTemLlTlLeSb6i9IJq2Yb' alt='' className="cursor-pointer" code='0deLhhr5L8TMTemLlTlLeSb6i9IJq2Yb' /></a> */}
                 <div className="flex gap-2">
                     <div className="border rounded-lg p-4 flex flex-col gap-4 items-center mt-2">
                         {
-                            Object.keys(ORDER_STATUSES).map((key, index) => (
-                                <button key={index} type="button" onClick={() => setSelectedFilter(ORDER_STATUSES[key])} className={`w-full flex justify-between ${selectedFilter?.name === ORDER_STATUSES[key].name && 'submit'} `}>
-                                    {ORDER_STATUSES[key].persian}
+                            Object.keys(driverStatuses).map((key, index) => (
+                                <button key={index} type="button" onClick={() => setSelectedFilter(driverStatuses[key])} className={`w-full flex justify-between ${selectedFilter?.name === driverStatuses[key].name && 'submit'} `}>
+                                    {driverStatuses[key].persian}
                                     <span className="p-2 rounded-lg bg-gray-100 size-8 flex items-center justify-center text-primary">
-                                        {orders.filter(order => order.status === ORDER_STATUSES[key].name).length}
+                                        {orders.filter(order => order.status === driverStatuses[key].name).length}
                                     </span>
                                 </button>
                             ))

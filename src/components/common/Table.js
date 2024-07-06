@@ -114,7 +114,11 @@ export default function DataTable({ columns, data }) {
                 <tbody className="bg-white divide-y divide-gray-200">
                     {
                         data?.length === 0 ? (
-                            <Alert text="داده ای جهت نمایش وجود ندارد"/>
+                            <tr>
+                                <td>
+                                    <Alert text="داده ای جهت نمایش وجود ندارد"/>
+                                </td>
+                            </tr>
                         ) : (
                             table.getRowModel().rows.map(row => (
                                 <tr className='bg-gray-100' key={row.id}>

@@ -13,15 +13,17 @@ async function findLowestBid() {
     for (let order of orders) {
         if(order?.shippingInfo) {
             const driver = await User.findById(order.shippingInfo.driver) 
+            console.log(driver);
             const sendedData = {
                 "op": "pattern",
                 "user": "FREE09371567428",
                 "pass": "Faraz@0880337834",
                 "fromNum": "+985000125475",
                 "toNum": driver.phone,
-                "patternCode": "8ggrskeuyy2lkx4",
+                "patternCode": "t8vlrfkiqvxvumv",
                 "inputData": [
-                    { "verification-code": 111 }
+                    { "orderId": order._id },
+                    { "shippingCost": order.shippingInfo.shippingCost },
                 ]
             }
     

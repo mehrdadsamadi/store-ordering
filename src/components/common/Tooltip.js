@@ -41,7 +41,7 @@
 
 import { useState } from 'react';
 
-const Tooltip = ({ text, arrayText = [], children, direction = 'left' }) => {
+const Tooltip = ({ text, arrayText = [], children, direction = 'left', width = 10 }) => {
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState({});
 
@@ -55,7 +55,7 @@ const Tooltip = ({ text, arrayText = [], children, direction = 'left' }) => {
     switch (direction) {
       case 'top':
         newPosition = {
-          top: rect.top + scrollY - rect.height - 10,
+          top: rect.top + scrollY - rect.height - width,
           left: rect.left + scrollX + rect.width / 2,
           transform: 'translateX(-50%)',
         };
@@ -63,13 +63,13 @@ const Tooltip = ({ text, arrayText = [], children, direction = 'left' }) => {
       case 'right':
         newPosition = {
           top: rect.top + scrollY + rect.height / 2,
-          left: rect.right + scrollX + 10,
+          left: rect.right + scrollX + width,
           transform: 'translateY(-50%)',
         };
         break;
       case 'bottom':
         newPosition = {
-          top: rect.bottom + scrollY + 10,
+          top: rect.bottom + scrollY + width,
           left: rect.left + scrollX + rect.width / 2,
           transform: 'translateX(-50%)',
         };
@@ -77,7 +77,7 @@ const Tooltip = ({ text, arrayText = [], children, direction = 'left' }) => {
       case 'left':
         newPosition = {
           top: rect.top + scrollY + rect.height / 2,
-          left: rect.left + scrollX - rect.width - 10,
+          left: rect.left + scrollX - rect.width - width,
           transform: 'translateY(-50%)',
         };
         break;
